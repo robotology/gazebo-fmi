@@ -1,2 +1,2 @@
 # gazebo-fmi
- FMI import plugins for the Gazebo Simulator. 
+FMI Import plugins for the Gazebo Simulator.
