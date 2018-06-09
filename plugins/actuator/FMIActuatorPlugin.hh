@@ -93,8 +93,8 @@ namespace gazebo_fmi
 
         private: bool LoadFMUs(gazebo::physics::ModelPtr _parent);
 
-        /// \brief Callback on world update event.
-        private: void WorldUpdateCallback(const gazebo::common::UpdateInfo & updateInfo);
+        /// \brief Callback on before physics update event
+        private: void BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo);
 
         /// \brief The joints we want to actuate
         private: gazebo::physics::JointPtr joint;

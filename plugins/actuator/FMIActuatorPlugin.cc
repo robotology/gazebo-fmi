@@ -59,7 +59,7 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
 
     // Set up a physics update callback
     this->connections.push_back(gazebo::event::Events::ConnectBeforePhysicsUpdate(
-      boost::bind(&FMIActuatorPlugin::WorldUpdateCallback, this, _1)));
+      boost::bind(&FMIActuatorPlugin::BeforePhysicsUpdateCallback, this, _1)));
 
      std::cerr << "FMIActuatorPlugin::Load  end with success" << std::endl;
 }
@@ -191,7 +191,7 @@ bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)
 
 
 //////////////////////////////////////////////////
-void FMIActuatorPlugin::WorldUpdateCallback(const gazebo::common::UpdateInfo & updateInfo)
+void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo)
 {
     gzdbg << "FMIActuatorPlugin::WorldUpdateCallback" << std::endl;
 
