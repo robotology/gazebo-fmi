@@ -29,6 +29,8 @@
 
 #include <functional>
 
+#include <experimental/filesystem>
+
 
 using namespace gazebo_fmi;
 
@@ -101,7 +103,14 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
                << std::endl;
         return false;
       }
+
       actuator.fmuAbsolutePath =  gazebo::common::SystemPaths::Instance()->FindFile(elem->Get<std::string>("fmu"));
+      if (!std::experimental::filesystem::exists(actuator.fmuAbsolutePath))
+      {
+        gzerr << "FMIActuatorPlugin: Impossible to find FMU named " << elem->Get<std::string>("fmu")
+              << " in the GAZEBO_RESOURCE_PATH directories" << std::endl;
+        return false;
+      }
 
       if (!elem->HasElement("actuatorInputName"))
       {

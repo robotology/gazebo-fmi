@@ -27,6 +27,7 @@ target_compile_definitions(FMIActuatorPluginTest PRIVATE -DCMAKE_CURRENT_BINARY_
 target_compile_definitions(FMIActuatorPluginTest PRIVATE -DFMI_ACTUATOR_PLUGIN_BUILD_DIR="$<TARGET_FILE_DIR:FMIActuatorPlugin>")
 
 # The test depends on the FMU
-# add_dependencies(FMIActuatorPluginTest IdentityTrasmission.fmu NullTrasmission.fmu CompliantTrasmission.mo)
-
+# see https://samthursfield.wordpress.com/2015/11/21/cmake-dependencies-between-targets-and-files-and-custom-commands/
+add_custom_target(generate-fmu-actuator-test DEPENDS IdentityTrasmission.fmu NullTrasmission.fmu CompliantTrasmission.mo)
+add_dependencies(FMIActuatorPluginTest generate-fmu-actuator-test)
 add_test(NAME FMIActuatorPluginTest COMMAND FMIActuatorPluginTest)
