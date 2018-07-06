@@ -3,7 +3,7 @@
 [Functional Mock-up Interface (FMI)](https://fmi-standard.org/) import plugins for the [Gazebo Simulator](http://gazebosim.org/).
 
 # Overview
-- [About versioning](about-versioning)
+- [About versioning](#about-versioning)
 - [Background](#background)
 - [Dependencies](#dependencies)
 - [Build the plugins](#build-the-plugins)
