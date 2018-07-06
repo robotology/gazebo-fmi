@@ -4,12 +4,11 @@
 
 # Overview
 - [About versioning](about-versioning)
-- [Background](#-background)
-- [Dependencies](#-dependencies)
+- [Background](#background)
+- [Dependencies](#dependencies)
 - [Build the plugins](#build-the-plugins)
 - [Use the plugins](#use-the-plugins)
 - [Test the plugins](#test-the-plugins)
-- [Use the plugins](#use-the-plugins)
 
 
 # About versioning
@@ -20,7 +19,7 @@ The project is undergoing _heavy_ development: APIs may still be subject to chan
 This repository contains plugins for the [Gazebo robotic simulator](http://gazebosim.org/) to enable
 [co-simulation](https://en.wikipedia.org/wiki/Co-simulation) between the physics simulation of Gazebo
 and simulation tools that support the [Functional Mock-up Interface (FMI)](https://fmi-standard.org/) standard.
-At the moment, the report just contains a plugin that **import** FMUs for simulation of the actuator dynamics.
+At the moment, the report just contains a plugin that **import** Functional Mock-up Units (FMUs) for simulation of the actuator dynamics.
 
 A good introductory paper to the co-simulation concept is available at https://arxiv.org/abs/1702.00686 .
 
