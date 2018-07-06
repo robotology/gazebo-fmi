@@ -12,13 +12,13 @@ Example configuration:
   ...
   <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">
     <actuator>
-      <name>actuator_0</name> <!-- Name of the  -->
-      <joint>JOINT_0</joint> <!-- name of joint to actuate in the model -->
-      <fmu>electric_motor</fmu> <!-- name of the fmu -->
-      <actuatorInputName>actuatorInput</actuatorInputName> <!-- FMU actuator input variable name -->
-      <jointPositionName>jointPosition</jointPositionName> <!-- FMU joint position input variable name -->
-      <jointVelocityName>jointVelocity</jointVelocityName> <!-- FMU joint velocity input variable name -->
-      <jointTorqueName>jointTorque</jointTorqueName>       <!-- FMU joint torque output variable name -->
+      <name>actuator_0</name> 
+      <joint>JOINT_0</joint> 
+      <fmu>electric_motor</fmu>
+      <actuatorInputName>actuatorInput</actuatorInputName>
+      <jointPositionName>jointPosition</jointPositionName>
+      <jointVelocityName>jointVelocity</jointVelocityName>
+      <jointTorqueName>jointTorque</jointTorqueName>
     </actuator>
    </plugin>
 </model>
@@ -32,10 +32,19 @@ Documentation of the parameters of the `<actuator>` tag. All the parameters are 
 | name           | string  | Name of the actuator, used for printing debug and error messages. |  |
 | joint          | string  | Name of the joint. | The total list of joints contained in the model is scanned and the first joint that **ends** with this  name string is found. This is done to easily support nested models.  |
 | fmu            | string  | Filename of the FMU plugin to use for actuator co-simulation. | This name is passed to the [`gazebo::common::SystemPaths::FindFile`](http://osrf-distributions.s3.amazonaws.com/gazebo/api/9.0.0/classgazebo_1_1common_1_1SystemPaths.html#a9e03f07eac9f89d8c4c14af5660fa938) method to find the absolute location of the FMU file. Adding the directory containing the FMUs to the [`GAZEBO_RESOURCE_PATH`](http://gazebosim.org/tutorials?tut=components) should be sufficient to make it visible to the plugin. |
-| actuatorInputName | string | Name of the FMU input variable representing the actuator input. | This variable should be present in the FMU with causality INPUT. | 
-| jointPositionName | string | Name of the FMU input variable representing the joint position. | This variable should be present in the FMU with causality INPUT. | 
-| jointVelocityName | string | Name of the FMU input variable representing the joint velocity. | This variable should be present in the FMU with causality INPUT. | 
-| jointTorqueName   | string | Name of the FMU output variable representing the joint torque. | This variable should be present in the FMU with causality OUTPUT. | 
+| actuatorInputName | string | Name of the FMU input variable representing the actuator input. | This variable should be present in the FMU with causality `input`. | 
+| jointPositionName | string | Name of the FMU input variable representing the joint position. | This variable should be present in the FMU with causality `input`. | 
+| jointVelocityName | string | Name of the FMU input variable representing the joint velocity. | This variable should be present in the FMU with causality `input`. | 
+| jointTorqueName   | string | Name of the FMU output variable representing the joint torque. | This variable should be present in the FMU with causality `output`. | 
+
+
+For a precise definition of what the `causality` of a FMU variable is, see Section 3.2 of [the "Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models" paper](http://lup.lub.lu.se/search/ws/files/5428900/2972293.pdf) or 
+Section 2.2.7, Page 46 of the ["Functional Mock-up Interface for
+Model Exchange and Co-Simulation" v2.0 specification](https://svn.modelica.org/fmi/branches/public/specifications/v2.0/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf).
+
+An example related to co-simulation of force elements (i.e. an actuator model without `actuatorInput`)  is described in Section 4.1 of [the "Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models" paper](http://lup.lub.lu.se/search/ws/files/5428900/2972293.pdf). 
+
+
 
 
 
