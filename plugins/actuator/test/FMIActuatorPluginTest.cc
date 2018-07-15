@@ -18,15 +18,21 @@ class FMIActuatorPluginTest : public gazebo::ServerFixture,
 {
   public: void PluginTest(const std::string &_physicsEngine);
 
+  struct PluginTestHelperOptions
+  {
+      double expectedFinalPosition{0.0};
+      bool finalPositionIsReached{true};
+  };
+
   public: void PluginTestHelper(const std::string &_physicsEngine,
                                 const std::string &worldName,
-                                const double expectedFinalPosition);
+                                const PluginTestHelperOptions& options);
 
 };
 
 void FMIActuatorPluginTest::PluginTestHelper(const std::string &_physicsEngine,
                                              const std::string &worldName,
-                                             const double expectedFinalPosition)
+                                             const PluginTestHelperOptions& options)
 {
   bool worldPaused = true;
   std::string worldAbsPath = CMAKE_CURRENT_SOURCE_DIR"/" + worldName;
@@ -42,7 +48,6 @@ void FMIActuatorPluginTest::PluginTestHelper(const std::string &_physicsEngine,
 
   // Get model
   auto model = world->ModelByName("pendulum_with_base");
-
 
   // Set the desired position
   auto jointController = model->GetJointController();
@@ -68,33 +73,61 @@ void FMIActuatorPluginTest::PluginTestHelper(const std::string &_physicsEngine,
 
   for(int i=0; i < 3000; i++)
   {
-    //gzdbg << "Calling world->Step for i " << i << std::endl;
-    gzerr << "Calling step" << std::endl;
     world->Step(1);
-    // Measured position
-    //gzdbg << "Measured  position " << joint->Position(0u) << std::endl;
   }
 
   gzdbg << "Final  position " << joint->Position(0u) << std::endl;
-  EXPECT_NEAR(joint->Position(0u), expectedFinalPosition, 0.1);
+  double tol = 0.1;
+  if (options.finalPositionIsReached)
+  {
+    EXPECT_NEAR(joint->Position(0u), options.expectedFinalPosition, tol);
+  }
+  else
+  {
+    EXPECT_TRUE(std::abs(joint->Position(0u)-options.expectedFinalPosition) > tol);
+  }
+
+  // Unload the simulation
+  Unload();
 }
 
 /////////////////////////////////////////////////////////////////////
 void FMIActuatorPluginTest::PluginTest(const std::string &_physicsEngine)
 {
+  if(_physicsEngine == "simbody")
+  {
+      gzlog << "Aborting test: the FMIActuatorPluginTest is not workign correctly for Simbody, see https://github.com/robotology-playground/gazebo-fmi/issues/4 ." << std::endl;
+      return;
+  }
+
   // Defined by CMake
   std::string pluginDir = FMI_ACTUATOR_PLUGIN_BUILD_DIR;
   std::string fmuPath   = CMAKE_CURRENT_BINARY_DIR;
-  gzdbg << "Adding " << pluginDir << " to the GAZEBO_PLUGIN_PATH" << std::endl;
   gazebo::common::SystemPaths::Instance()->AddPluginPaths(pluginDir);
-  gzdbg << "Adding " << fmuPath << " to the GAZEBO_RESOURCE_PATH" << std::endl;
   gazebo::common::SystemPaths::Instance()->AddGazeboPaths(fmuPath);
 
-  // With the null trasmission, the PID loop should not be effective
-  this->PluginTestHelper(_physicsEngine, "test_NullTrasmission.world", -1.5708);
+  // With the null trasmission, the PID loop should not be effective at all
+  PluginTestHelperOptions options;
+  options.expectedFinalPosition = -1.5708;
+  options.finalPositionIsReached = true;
+  this->PluginTestHelper(_physicsEngine, "test_NullTransmission.world", options);
 
   // With the identity trasmission, the PID loop should work fine
-  this->PluginTestHelper(_physicsEngine, "test_IdentityTrasmission.world", 0.0);
+  options.expectedFinalPosition = 0.0;
+  options.finalPositionIsReached = true;
+  this->PluginTestHelper(_physicsEngine, "test_IdentityTransmission.world", options);
+
+  // With the compliant trasmission, the PID loop should work fine as well, given that
+  // the spring is stiff enough
+  options.expectedFinalPosition = 0.0;
+  options.finalPositionIsReached = true;
+  this->PluginTestHelper(_physicsEngine, "test_CompliantTransmission.world", options);
+
+  // With the soft trasmission, the trasmission spring is too soft and the
+  // PID is not effective
+  options.expectedFinalPosition = 0.0;
+  options.finalPositionIsReached = false;
+  this->PluginTestHelper(_physicsEngine, "test_SoftTransmission.world", options);
 }
 
 /////////////////////////////////////////////////
@@ -103,7 +136,7 @@ TEST_P(FMIActuatorPluginTest, PluginTest)
   PluginTest(GetParam());
 }
 
-INSTANTIATE_TEST_CASE_P(PhysicsEngines, FMIActuatorPluginTest, ::testing::Values("ode"));
+INSTANTIATE_TEST_CASE_P(PhysicsEngines, FMIActuatorPluginTest, PHYSICS_ENGINE_VALUES);
 
 /////////////////////////////////////////////////
 /// Main

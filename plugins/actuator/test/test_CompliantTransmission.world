@@ -160,7 +160,7 @@
        <actuator>
          <name>upper_joint_actuator</name>
          <joint>upper_joint</joint>
-         <fmu>IdentityTrasmission.fmu</fmu>
+         <fmu>CompliantTransmission.fmu</fmu>
          <actuatorInputName>actuatorInput</actuatorInputName>
          <jointPositionName>jointPosition</jointPositionName>
          <jointVelocityName>jointVelocity</jointVelocityName>
