@@ -69,6 +69,7 @@ getErrorString();
   add_custom_command(OUTPUT ${_OCM_MODEL_NAME}.fmu
                      COMMAND ${OMC_COMPILER} ${CMAKE_CURRENT_BINARY_DIR}/ocm_compile_fmu_${_OCM_MODEL_NAME}.mos
                      COMMENT "Generating FMU for model ${_OCM_MODEL_NAME}"
-                     WORKING_DIRECTORY  ${_OCM_OUTPUT_DIRECTORY})
+                     WORKING_DIRECTORY  ${_OCM_OUTPUT_DIRECTORY}
+                     DEPENDS ${_OCM_INPUT_MO})
 
 endmacro()
