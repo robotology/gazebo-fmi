@@ -138,7 +138,7 @@ bool FMUCoSimulation::load(const std::string& fmuAbsolutePath, const std::string
     m_pimpl->callbacks.realloc = realloc;
     m_pimpl->callbacks.free = free;
     m_pimpl->callbacks.logger = GazeboFMI_importlogger;
-    m_pimpl->callbacks.log_level = jm_log_level_debug;
+    m_pimpl->callbacks.log_level = jm_log_level_error;
     m_pimpl->callbacks.context = 0;
 
     // Allocate context

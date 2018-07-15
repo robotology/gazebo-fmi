@@ -35,16 +35,8 @@
 using namespace gazebo_fmi;
 
 //////////////////////////////////////////////////
-double NullTorqueActuator(double position, double velocity,
-                          double actuatorInput, const FMUActuatorProperties& actProp)
-{
-    return 0.0;
-}
-
-//////////////////////////////////////////////////
 void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 {
-    std::cerr << "FMIActuatorPlugin::Load " << std::endl;
     // Parse parameters
     if (!this->ParseParameters(_parent, _sdf))
     {
@@ -57,13 +49,12 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
     {
         gzerr << "FMIActuatorPlugin: error in loading FMUs, plugin loading failed."
               << std::endl;
+        return;
     }
 
     // Set up a physics update callback
     this->connections.push_back(gazebo::event::Events::ConnectBeforePhysicsUpdate(
       boost::bind(&FMIActuatorPlugin::BeforePhysicsUpdateCallback, this, _1)));
-
-     std::cerr << "FMIActuatorPlugin::Load  end with success" << std::endl;
 }
 
 //////////////////////////////////////////////////
@@ -196,14 +187,14 @@ bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)
         }
         actuator.outputVarBuffers.resize(actuator.outputVarBuffers.size());
     }
+
+    return true;
 }
 
 
 //////////////////////////////////////////////////
 void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo)
 {
-    gzdbg << "FMIActuatorPlugin::WorldUpdateCallback" << std::endl;
-
     // TODO(traversaro): review this part
     double simulatedTimeInSeconds  = updateInfo.simTime.Double();
     auto world = gazebo::physics::get_world(updateInfo.worldName);
@@ -241,8 +232,6 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
         // This order should be coherent with the order defined in LoadFMUs
         double jointTorque = actuator.outputVarBuffers[0];
 
-        gzerr << "Reading actuator input of " << actuatorInput << std::endl;
-        gzerr << "Setting force " << jointTorque << " to joint " << std::endl;
         // Note: at least in ODE, two consecutive SetForce calls are added to the same buffer:
         // for this reason, to overwrite the previous value with subtract it
         joint->SetForce(0u, jointTorque-actuatorInput);
