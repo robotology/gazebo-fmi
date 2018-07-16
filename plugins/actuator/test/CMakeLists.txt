@@ -8,14 +8,17 @@
 
 include(FMIUtils)
 
-omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/NullTrasmission.mo
-                      MODEL_NAME NullTrasmission
+omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/NullTransmission.mo
+                      MODEL_NAME NullTransmission
                       OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/IdentityTrasmission.mo
-                      MODEL_NAME IdentityTrasmission
+omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/IdentityTransmission.mo
+                      MODEL_NAME IdentityTransmission
                       OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/CompliantTrasmission.mo
-                      MODEL_NAME CompliantTrasmission
+omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/CompliantTransmission.mo
+                      MODEL_NAME CompliantTransmission
+                      OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/SoftTransmission.mo
+                      MODEL_NAME SoftTransmission
                       OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(FMIActuatorPluginTest FMIActuatorPluginTest.cc)
@@ -28,6 +31,6 @@ target_compile_definitions(FMIActuatorPluginTest PRIVATE -DFMI_ACTUATOR_PLUGIN_B
 
 # The test depends on the FMU
 # see https://samthursfield.wordpress.com/2015/11/21/cmake-dependencies-between-targets-and-files-and-custom-commands/
-add_custom_target(generate-fmu-actuator-test DEPENDS IdentityTrasmission.fmu NullTrasmission.fmu CompliantTrasmission.mo)
+add_custom_target(generate-fmu-actuator-test DEPENDS IdentityTransmission.fmu NullTransmission.fmu CompliantTransmission.fmu SoftTransmission.fmu)
 add_dependencies(FMIActuatorPluginTest generate-fmu-actuator-test)
 add_test(NAME FMIActuatorPluginTest COMMAND FMIActuatorPluginTest)
