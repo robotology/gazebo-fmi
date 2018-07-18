@@ -246,13 +246,19 @@ gazebo::physics::JointPtr FMIActuatorPlugin::FindJointInModel(const std::string&
     {
         const std::string& currentJointName=currentJoint->GetName();
 
+        if(currentJointName==jointName)//if you use the long name
+        {
+            joint=currentJoint;
+            break;
+        }
+
         std::size_t lastJointNamePart = currentJointName.find_last_of("::");
         std::string currentJointNameShort;
-        if (lastJointNamePart==std::string::npos)
+        if (lastJointNamePart==std::string::npos)//in the model the joint names are not scoped
         {
             currentJointNameShort=currentJointName;
         }
-        else
+        else//in the model the joint names are scoped
         {
             currentJointNameShort=currentJointName.substr(lastJointNamePart+1);
         }
