@@ -79,8 +79,8 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       }
       std::string jointName = elem->Get<std::string>("joint");
 
+      joint=FindJointInModel(jointName,_parent);
       // Store pointer to the joint we will actuate
-      joint = _parent->GetJoint(jointName);
       if (!joint)
       {
          gzerr << "FMIActuatorPlugin: Invalid SDF, actuator joint " << jointName << " does not "
@@ -237,3 +237,31 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
         joint->SetForce(0u, jointTorque-actuatorInput);
     }
 }
+
+//////////////////////////////////////////////////
+gazebo::physics::JointPtr FMIActuatorPlugin::FindJointInModel(const std::string& jointName,gazebo::physics::ModelPtr _parent)
+{
+    joint=nullptr;
+    for (auto currentJoint:_parent->GetJoints())
+    {
+        const std::string& currentJointName=currentJoint->GetName();
+
+        std::size_t lastJointNamePart = currentJointName.find_last_of("::");
+        std::string currentJointNameShort;
+        if (lastJointNamePart==std::string::npos)
+        {
+            currentJointNameShort=currentJointName;
+        }
+        else
+        {
+            currentJointNameShort=currentJointName.substr(lastJointNamePart+1);
+        }
+
+        if (currentJointNameShort!=jointName)
+            continue;
+
+        joint=currentJoint;
+        break;
+    } 
+    return joint;
+} 
