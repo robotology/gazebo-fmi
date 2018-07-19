@@ -93,7 +93,7 @@ namespace gazebo_fmi
 
         private: bool LoadFMUs(gazebo::physics::ModelPtr _parent);
         
-        private: gazebo::physics::JointPtr FindJointInModel(const std::string& jointName,gazebo::physics::ModelPtr _parent);
+        private: gazebo::physics::JointPtr FindJointInModel(const std::string& jointName,const gazebo::physics::ModelPtr _parent);
 
         /// \brief Callback on before physics update event
         private: void BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo);
