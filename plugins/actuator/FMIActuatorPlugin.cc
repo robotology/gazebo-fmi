@@ -239,7 +239,7 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
 }
 
 //////////////////////////////////////////////////
-gazebo::physics::JointPtr FMIActuatorPlugin::FindJointInModel(const std::string& jointName,gazebo::physics::ModelPtr _parent)
+gazebo::physics::JointPtr FMIActuatorPlugin::FindJointInModel(const std::string& jointName,const gazebo::physics::ModelPtr _parent)
 {
     joint=nullptr;
     for (auto currentJoint:_parent->GetJoints())
