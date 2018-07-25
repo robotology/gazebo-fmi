@@ -51,5 +51,27 @@ This model is exactly the same of the Compliant Transmission one, but with the d
 The same joint PID gains that are able to reach a given setpoint if the Compliant Transmission is used, are not able to control
 the joint if this transmission is used, due to the low stiffness of the spring.
 
+# Final note on generating the FMU on OpenModelica
 
+There are two way to generate the FMU file in OpenModelica. Be sure to choose the correct parameters.
 
+## GUI way
+Execute OpenModelica and load your model. Eventually load all the needed libraries (i.e. Modelica_Synchronous).
+Open the menu **Tools->Options**, tab FMI now choose the correct parameters:
+
+**Version:2  
+Type:Co-Simulation  
+Platform:Dynamics**
+
+Open the menu **FMI->Export FMU** at this point you have generated the .fmu file.
+
+## Command line way
+Execute OpenModelica and load your model. Eventually load all the needed libraries (i.e. Modelica_Synchronous).
+Open the menu **Tools->OpenModelica compiler CLI**
+ and type
+
+```
+buildModelFMU(<Your model name without .mo>,"2","cs","<default>",{"dynamic"},true)
+```
+
+At this point you have generated the .fmu file.
