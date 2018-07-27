@@ -63,8 +63,9 @@ See plugin-specific documentation on how to use each plugin:
 * [gazebo-fmi-actuator documentation](plugins/actuator/README.md)
 
 
-# Test the plugins
-For running the automatics tests of the plugins contained in this repo, you will need the additional dependency of the [OpenModelica](https://openmodelica.org/) compiler,that is used to generate test FMUs from [Modelica](https://www.modelica.org/) models. 
+# Test the plugins 
+For running the automatic tests of the plugins contained in this repo, you need the additional dependency of the [OpenModelica](https://openmodelica.org/) compiler. The OpenModelica compiler is used to generate test FMUs from [Modelica](https://www.modelica.org/) models. 
+
 Once you  installed OpenModelica on your system, you can regenerated the project with the `BUILD_TESTING` CMake option set to `ON` to compile the tests. Once test are compiled, you can run them using [ctest](https://cmake.org/cmake/help/latest/manual/ctest.1.html), for example run: 
 ```cmake
 $ ctest [-VV]
