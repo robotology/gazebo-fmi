@@ -46,6 +46,7 @@
 ///          <actuatorInputName>actuatorInput</actuatorInputName> <!-- FMU actuator input variable name -->
 ///          <jointPositionName>jointPosition</jointPositionName> <!-- FMU joint position input variable name -->
 ///          <jointVelocityName>jointVelocity</jointVelocityName> <!-- FMU joint velocity input variable name -->
+///          <jointAccelerationName>jointAcceleration</jointAccelerationName> <!-- FMU joint acceleration input variable name -->
 ///          <jointTorqueName>jointTorque</jointTorqueName>       <!-- FMU joint torque output variable name -->
 ///        </actuator>
 ///       </plugin>
@@ -58,6 +59,7 @@
 /// - actuatorInput: FMU actuator input variable name
 /// - jointPosition: FMU joint position input variable name
 /// - jointVelocity: FMU joint velocity input variable name
+/// - jointAcceleration: FMU joint acceleration input variable name
 /// - jointTorque:   FMU joint torque output variable name
 
 namespace gazebo_fmi
@@ -73,6 +75,7 @@ namespace gazebo_fmi
         public: std::string actuatorInputName;
         public: std::string jointPositionName;
         public: std::string jointVelocityName;
+        public: std::string jointAccelerationName;
         public: std::string jointTorqueName;
 
         public: FMUCoSimulation fmu;
@@ -94,6 +97,12 @@ namespace gazebo_fmi
         private: bool LoadFMUs(gazebo::physics::ModelPtr _parent);
         
         private: gazebo::physics::JointPtr FindJointInModel(const std::string& jointName,const gazebo::physics::ModelPtr _parent);
+
+        /// \brief Sanity check on the joint
+        private: bool CheckJointType(gazebo::physics::JointPtr jointPtr);
+
+        /// \brief Compute joint acceleration (not directly provided by Gazebo)
+        private: double GetJointAcceleration(gazebo::physics::JointPtr jointPtr);
 
         /// \brief Callback on before physics update event
         private: void BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo);

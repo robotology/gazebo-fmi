@@ -164,6 +164,7 @@
          <actuatorInputName>actuatorInput</actuatorInputName>
          <jointPositionName>jointPosition</jointPositionName>
          <jointVelocityName>jointVelocity</jointVelocityName>
+         <jointAccelerationName>jointAcceleration</jointAccelerationName>
          <jointTorqueName>jointTorque</jointTorqueName>
        </actuator>
     </plugin>

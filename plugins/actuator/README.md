@@ -18,6 +18,7 @@ Example configuration:
       <actuatorInputName>actuatorInput</actuatorInputName>
       <jointPositionName>jointPosition</jointPositionName>
       <jointVelocityName>jointVelocity</jointVelocityName>
+      <jointAccelerationName>jointAcceleration</jointAccelerationName>
       <jointTorqueName>jointTorque</jointTorqueName>
     </actuator>
    </plugin>
@@ -35,6 +36,7 @@ Documentation of the parameters of the `<actuator>` tag. All the parameters are 
 | actuatorInputName | string | Name of the FMU input variable representing the actuator input. | This variable should be present in the FMU with causality `input`. | 
 | jointPositionName | string | Name of the FMU input variable representing the joint position. | This variable should be present in the FMU with causality `input`. | 
 | jointVelocityName | string | Name of the FMU input variable representing the joint velocity. | This variable should be present in the FMU with causality `input`. | 
+| jointAccelerationName | string | Name of the FMU input variable representing the joint acceleration. | This variable should be present in the FMU with causality `input`. |
 | jointTorqueName   | string | Name of the FMU output variable representing the joint torque. | This variable should be present in the FMU with causality `output`. | 
 
 
