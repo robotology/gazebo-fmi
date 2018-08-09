@@ -32,7 +32,7 @@ We recommend to install Gazebo as described  in [official documentation](http://
 For FMILibrary, one option is to compile it as any CMake project and then add its installation prefix to [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/v3.10/variable/CMAKE_PREFIX_PATH.html).
 See [CGold guide](https://cgold.readthedocs.io/en/latest/first-step.html) if you need some details on how to build a CMake project.
 
-An easier option is provided by the gazebo-fmi repository which downloads and compiles the FMILibrary internally within its build folder using CMake's FetchContent option. This is performed when FMILibrary package is not already existing in the system or if the FMILibrary related environment variable (`FMI_ROOT`) is not set, making gazebo-fmi unable to find FMILibrary package.
+An easier option is provided by the gazebo-fmi repository which downloads and compiles the FMILibrary internally within its build folder using CMake's FetchContent option. This is performed when FMILibrary package is not already existing in the system or if the FMILibrary related environment variable (`FMILibrary_ROOT`) is not set, making gazebo-fmi unable to find FMILibrary package. To use this option, the CMake option `USES_SYSTEM_FMILIBRARY` should be set to `OFF`.
 
 # Build the plugins
 Use the following commands to build and install the plugin.
