@@ -37,6 +37,13 @@ using namespace gazebo_fmi;
 //////////////////////////////////////////////////
 void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 {
+    // Handle Gazebo simbody bug
+    if (gazebo::physics::get_world()->Physics()->GetType() == "simbody")
+    {
+        this->isSetForceCumulative = false;
+    }
+
+
     // Parse parameters
     if (!this->ParseParameters(_parent, _sdf))
     {
@@ -232,9 +239,16 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
         // This order should be coherent with the order defined in LoadFMUs
         double jointTorque = actuator.outputVarBuffers[0];
 
-        // Note: at least in ODE, two consecutive SetForce calls are added to the same buffer:
-        // for this reason, to overwrite the previous value with subtract it
-        joint->SetForce(0u, jointTorque-actuatorInput);
+        // Note: in ODE, Bullet and DART, two consecutive SetForce calls are added to the same buffer:
+        // for this reason, to overwrite the previous value we subtract it from the desired value
+        if (this->isSetForceCumulative)
+        {
+            joint->SetForce(0u, jointTorque-actuatorInput);
+        }
+        else
+        {
+            joint->SetForce(0u, jointTorque);
+        }
     }
 }
 

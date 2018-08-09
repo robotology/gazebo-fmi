@@ -106,6 +106,9 @@ namespace gazebo_fmi
 
         /// \brief Connections to events associated with this class.
         private: std::vector<gazebo::event::ConnectionPtr> connections;
+
+        /// \brief False for simbody, true for ode|bullet|dart, see https://bitbucket.org/osrf/gazebo/issues/2507/joint-setforce-is-not-additive-in-simbody
+        private: bool isSetForceCumulative{true};
     };
 
     // Register this plugin with the simulator
