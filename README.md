@@ -64,7 +64,7 @@ See plugin-specific documentation on how to use each plugin:
 
 
 # Test the plugins 
-For running the automatic tests of the plugins contained in this repo, you need the additional dependency of the [OpenModelica](https://openmodelica.org/) compiler. The OpenModelica compiler is used to generate test FMUs from [Modelica](https://www.modelica.org/) models. 
+For running the automatic tests of the plugins contained in this repo, you need the additional dependency of the [OpenModelica](https://openmodelica.org/) compiler. The OpenModelica compiler is used to generate test FMUs from [Modelica](https://www.modelica.org/) models. We recommend to use OpenModelica at least version 1.13 (the `nightly` version as of August 2018) as OpenModelica 1.12 has several bugs related to FMU generation (see https://github.com/robotology/gazebo-fmi/issues/5 and https://trac.openmodelica.org/OpenModelica/ticket/4135 ). 
 
 Once you  installed OpenModelica on your system, you can regenerated the project with the `BUILD_TESTING` CMake option set to `ON` to compile the tests. Once test are compiled, you can run them using [ctest](https://cmake.org/cmake/help/latest/manual/ctest.1.html), for example run: 
 ```cmake
