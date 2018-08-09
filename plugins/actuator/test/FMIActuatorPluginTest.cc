@@ -94,12 +94,6 @@ void FMIActuatorPluginTest::PluginTestHelper(const std::string &_physicsEngine,
 /////////////////////////////////////////////////////////////////////
 void FMIActuatorPluginTest::PluginTest(const std::string &_physicsEngine)
 {
-  if(_physicsEngine == "simbody")
-  {
-      gzlog << "Aborting test: the FMIActuatorPluginTest is not workign correctly for Simbody, see https://github.com/robotology-playground/gazebo-fmi/issues/4 ." << std::endl;
-      return;
-  }
-
   // Defined by CMake
   std::string pluginDir = FMI_ACTUATOR_PLUGIN_BUILD_DIR;
   std::string fmuPath   = CMAKE_CURRENT_BINARY_DIR;
