@@ -9,7 +9,8 @@
 add_library(FMIActuatorPlugin SHARED FMIActuatorPlugin.hh FMIActuatorPlugin.cc
                                      FMUCoSimulation.hh FMUCoSimulation.cc)
 target_include_directories(FMIActuatorPlugin PUBLIC ${GAZEBO_INCLUDE_DIRS})
-target_link_libraries(FMIActuatorPlugin PUBLIC ${GAZEBO_LIBRARIES} FMILibrary::FMILibrary)
+target_link_libraries(FMIActuatorPlugin PUBLIC ${GAZEBO_LIBRARIES})
+target_link_libraries(FMIActuatorPlugin PRIVATE FMILibrary::FMILibrary)
 if(NOT MSVC)
     target_link_libraries(FMIActuatorPlugin PUBLIC stdc++fs)
 endif()

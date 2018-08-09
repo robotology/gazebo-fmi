@@ -12,7 +12,7 @@
 
 
 # About versioning
-The project is undergoing _heavy_ development: APIs may still be subject to changes, and some functionalities may be broken. 
+The project is undergoing _heavy_ development: APIs may still be subject to changes, and some functionalities may be broken.
 
 
 # Background
@@ -28,9 +28,11 @@ gazebo-fmi depends on
 - [Gazebo](http://gazebosim.org/) - `version >= 7`
 - [FMILibrary](https://jmodelica.org/) (see https://github.com/svn2github/FMILibrary for an updated GitHub mirror) - `version >= 2.0.3`
 
-We recommend to install Gazebo as described  in [official documentation](http://gazebosim.org/tutorials?cat=install),
-while for FMILibrary the easiest option is to compile it as any CMake project and then add its installation prefix to [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/v3.10/variable/CMAKE_PREFIX_PATH.html).
+We recommend to install Gazebo as described  in [official documentation](http://gazebosim.org/tutorials?cat=install).
+For FMILibrary, one option is to compile it as any CMake project and then add its installation prefix to [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/v3.10/variable/CMAKE_PREFIX_PATH.html).
 See [CGold guide](https://cgold.readthedocs.io/en/latest/first-step.html) if you need some details on how to build a CMake project.
+
+An easier option is provided by the gazebo-fmi repository which downloads and compiles the FMILibrary internally within its build folder using CMake's FetchContent option. This is performed when FMILibrary package is not already existing in the system or if the FMILibrary related environment variable (`FMI_ROOT`) is not set, making gazebo-fmi unable to find FMILibrary package.
 
 # Build the plugins
 Use the following commands to build and install the plugin.
@@ -63,10 +65,10 @@ See plugin-specific documentation on how to use each plugin:
 * [gazebo-fmi-actuator documentation](plugins/actuator/README.md)
 
 
-# Test the plugins 
-For running the automatic tests of the plugins contained in this repo, you need the additional dependency of the [OpenModelica](https://openmodelica.org/) compiler. The OpenModelica compiler is used to generate test FMUs from [Modelica](https://www.modelica.org/) models. 
+# Test the plugins
+For running the automatic tests of the plugins contained in this repo, you need the additional dependency of the [OpenModelica](https://openmodelica.org/) compiler. The OpenModelica compiler is used to generate test FMUs from [Modelica](https://www.modelica.org/) models.
 
-Once you  installed OpenModelica on your system, you can regenerated the project with the `BUILD_TESTING` CMake option set to `ON` to compile the tests. Once test are compiled, you can run them using [ctest](https://cmake.org/cmake/help/latest/manual/ctest.1.html), for example run: 
+Once you  installed OpenModelica on your system, you can regenerated the project with the `BUILD_TESTING` CMake option set to `ON` to compile the tests. Once test are compiled, you can run them using [ctest](https://cmake.org/cmake/help/latest/manual/ctest.1.html), for example run:
 ```cmake
 $ ctest [-VV]
 ```

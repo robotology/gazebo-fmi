@@ -57,16 +57,16 @@ if(FMILibrary_LIBRARY AND FMILibrary_INCLUDE_DIR AND NOT TARGET FMILibrary::FMIL
 
   set(FMILibrary_LIBRARIES FMILibrary::FMILibrary)
   set(FMILibrary_INCLUDE_DIRS "${FMILibrary_INCLUDE_DIR}")
+
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(FMILibrary
+                                    FOUND_VAR FMILibrary_FOUND
+                                    REQUIRED_VARS FMILibrary_LIBRARIES FMILibrary_INCLUDE_DIRS)
+
+  # Set package properties if FeatureSummary was included
+  if(COMMAND set_package_properties)
+    set_package_properties(FMILibrary PROPERTIES DESCRIPTION "FMILibrary"
+                                            URL "http://www.jmodelica.org/FMILibrary")
+  endif()
 endif()
 
-
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(FMILibrary
-                                  FOUND_VAR FMILibrary_FOUND
-                                  REQUIRED_VARS FMILibrary_LIBRARIES FMILibrary_INCLUDE_DIRS)
-
-# Set package properties if FeatureSummary was included
-if(COMMAND set_package_properties)
-  set_package_properties(FMILibrary PROPERTIES DESCRIPTION "FMILibrary"
-                                          URL "http://www.jmodelica.org/FMILibrary")
-endif()

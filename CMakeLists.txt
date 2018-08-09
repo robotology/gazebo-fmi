@@ -1,6 +1,6 @@
 # Copyright (C) 2018 Fondazione Istituto Italiano di Tecnologia
-# 
-# Licensed under either the GNU Lesser General Public License v3.0 : 
+#
+# Licensed under either the GNU Lesser General Public License v3.0 :
 # https://www.gnu.org/licenses/lgpl-3.0.html
 # or the GNU Lesser General Public License v2.1 :
 # https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
@@ -24,6 +24,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}"
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+if (CMAKE_VERSION VERSION_LESS 3.11)
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake-3.11)
+endif() 
 
 option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static" ON)
 
@@ -32,6 +35,7 @@ option(BUILD_TESTING "Create tests using CMake" OFF)
 if(BUILD_TESTING)
     enable_testing()
 endif()
+
 
 # Encourage user to specify a build type (e.g. Release, Debug, etc.), otherwise set it to Release.
 if(NOT CMAKE_CONFIGURATION_TYPES)
@@ -49,13 +53,17 @@ if (gazebo_VERSION_MAJOR LESS 7.0)
 endif()
 
 find_package(FMILibrary REQUIRED)
+if (NOT FMILibary_FOUND})
+   message("Could not find FMILIbrary package. Downloading it using FetchContent...")
+   include(FetchFMILibrary)
+endif()
 
 # Add extern libraries vendored (only used for the tests)
 if(BUILD_TESTING)
   add_subdirectory(extern)
 endif()
 
-# Add plugins 
+# Add plugins
 add_subdirectory(plugins)
 
 include(InstallBasicPackageFiles)
@@ -69,5 +77,3 @@ install_basic_package_files(${PROJECT_NAME}
 
 # Add the uninstall target
 include(AddUninstallTarget)
-
-
