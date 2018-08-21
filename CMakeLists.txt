@@ -57,12 +57,12 @@ option(USE_SYSTEM_FMILIBRARY "If TRUE/ON use system FMILibrary, otherwise downlo
 if (USE_SYSTEM_FMILIBRARY)
     find_package(FMILibrary REQUIRED)
 else()
-   include(FetchFMILibrary)
+    include(FetchFMILibrary)
 endif()
 
 # Add extern libraries vendored (only used for the tests)
 if(BUILD_TESTING)
-  add_subdirectory(extern)
+    add_subdirectory(extern)
 endif()
 
 # Add plugins
@@ -79,3 +79,4 @@ install_basic_package_files(${PROJECT_NAME}
 
 # Add the uninstall target
 include(AddUninstallTarget)
+

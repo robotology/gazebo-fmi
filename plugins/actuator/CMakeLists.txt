@@ -22,5 +22,6 @@ install(TARGETS FMIActuatorPlugin
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS FMIActuatorPlugin)
 
 if(BUILD_TESTING)
-  add_subdirectory(test)
+    add_subdirectory(test)
 endif()
+
