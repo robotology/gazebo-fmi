@@ -30,7 +30,7 @@ apt-get install -y libgazebo9-dev openmodelica
 # Script
 cd $TRAVIS_BUILD_DIR
 mkdir build && cd build
-cmake -DBUILD_TESTING:BOOL=ON -DUSES_SYSTEM_FMILIBRARY:BOOL=OFF -G"${TRAVIS_CMAKE_GENERATOR}" ..
+cmake -DBUILD_TESTING:BOOL=ON -DUSE_SYSTEM_FMILIBRARY:BOOL=OFF -G"${TRAVIS_CMAKE_GENERATOR}" ..
 cmake --build . --config $TRAVIS_BUILD_TYPE
 ctest --output-on-failure --build-config ${TRAVIS_BUILD_TYPE}
 cmake --build . --config ${TRAVIS_BUILD_TYPE} --target install
