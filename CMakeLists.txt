@@ -66,7 +66,8 @@ endif()
 
 # Add extern libraries vendored (only used for the tests)
 if(BUILD_TESTING)
-    add_subdirectory(extern)
+  find_package(MATIO REQUIRED)
+  add_subdirectory(extern)
 endif()
 
 # Add support libraries
