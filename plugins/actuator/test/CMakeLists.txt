@@ -20,6 +20,9 @@ omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/CompliantTransmission
 omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/SoftTransmission.mo
                       MODEL_NAME SoftTransmission
                       OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/StiffTransmission.mo
+                      MODEL_NAME StiffTransmission
+                      OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(FMIActuatorPluginTest FMIActuatorPluginTest.cc)
 target_include_directories(FMIActuatorPluginTest PUBLIC ${GAZEBO_INCLUDE_DIRS})
@@ -31,6 +34,6 @@ target_compile_definitions(FMIActuatorPluginTest PRIVATE -DFMI_ACTUATOR_PLUGIN_B
 
 # The test depends on the FMU
 # see https://samthursfield.wordpress.com/2015/11/21/cmake-dependencies-between-targets-and-files-and-custom-commands/
-add_custom_target(generate-fmu-actuator-test DEPENDS IdentityTransmission.fmu NullTransmission.fmu CompliantTransmission.fmu SoftTransmission.fmu)
+add_custom_target(generate-fmu-actuator-test DEPENDS IdentityTransmission.fmu NullTransmission.fmu CompliantTransmission.fmu SoftTransmission.fmu StiffTransmission.fmu)
 add_dependencies(FMIActuatorPluginTest generate-fmu-actuator-test)
 add_test(NAME FMIActuatorPluginTest COMMAND FMIActuatorPluginTest)

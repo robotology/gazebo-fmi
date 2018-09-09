@@ -46,6 +46,8 @@ void FMIActuatorPluginTest::PluginTestHelper(const std::string &_physicsEngine,
   ASSERT_TRUE(physics != NULL);
   EXPECT_EQ(physics->GetType(), _physicsEngine);
 
+  gzdbg << "FMIActuatorPluginTest: testing world " << worldName << std::endl;
+
   // Get model
   auto model = world->ModelByName("pendulum_with_base");
 
@@ -110,6 +112,11 @@ void FMIActuatorPluginTest::PluginTest(const std::string &_physicsEngine)
   options.expectedFinalPosition = 0.0;
   options.finalPositionIsReached = true;
   this->PluginTestHelper(_physicsEngine, "test_IdentityTransmission.world", options);
+
+  // With the stiff trasmission, the PID loop should work fine
+  options.expectedFinalPosition = 0.0;
+  options.finalPositionIsReached = true;
+  this->PluginTestHelper(_physicsEngine, "test_StiffTransmission.world", options);
 
   // With the compliant trasmission, the PID loop should work fine as well, given that
   // the spring is stiff enough

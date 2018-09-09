@@ -87,6 +87,8 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       std::string jointName = elem->Get<std::string>("joint");
 
       joint=FindJointInModel(jointName,_parent);
+
+
       // Store pointer to the joint we will actuate
       if (!joint)
       {
@@ -94,6 +96,14 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
                << "exist!" << std::endl;
         return false;
       }
+
+      // Check type
+      bool typeOk = this->CheckJointType(joint);
+      if (!typeOk)
+      {
+        return false;
+      }
+
 
       if (!elem->HasElement("fmu"))
       {
@@ -135,6 +145,14 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       }
       actuator.jointVelocityName = elem->Get<std::string>("jointVelocityName");
 
+      if (!elem->HasElement("jointAccelerationName"))
+      {
+         gzerr << "FMIActuatorPlugin: Invalid SDF, jointAccelerationName parameter not found."
+               << std::endl;
+        return false;
+      }
+      actuator.jointAccelerationName = elem->Get<std::string>("jointAccelerationName");
+
       if (!elem->HasElement("jointTorqueName"))
       {
          gzerr << "FMIActuatorPlugin: Invalid SDF, jointTorqueName parameter not found."
@@ -175,6 +193,7 @@ bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)
         inputVariablesNames.push_back(actuator.actuatorInputName);
         inputVariablesNames.push_back(actuator.jointPositionName);
         inputVariablesNames.push_back(actuator.jointVelocityName);
+        inputVariablesNames.push_back(actuator.jointAccelerationName);
 
         // Get references for input variables
         ok = actuator.fmu.getInputVariableRefs(inputVariablesNames, actuator.inputVarReferences);
@@ -198,6 +217,62 @@ bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)
     return true;
 }
 
+//////////////////////////////////////////////////
+bool FMIActuatorPlugin::CheckJointType(gazebo::physics::JointPtr jointPtr)
+{
+    if (jointPtr->DOF() != 1)
+    {
+        gzerr << "FMIActuatorPlugin: joint " << jointPtr->GetScopedName() << " has "
+              << jointPtr->DOF() << ", only joint with 1 DOFs are currently supported." << std::endl;
+        return false;
+    }
+
+    if (!(jointPtr->GetType() & gazebo::physics::Base::HINGE_JOINT))
+    {
+        gzwarn << "FMIActuatorPlugin: joint " << jointPtr->GetScopedName() << " is not an HingeJoint. " << std::endl;
+        gzwarn << "Feedback on joint acceleration is currently available only for HingeJoint, "
+               << "so it is possible to use this joint only with an FMU that is not using acceleration feedback." << std::endl;
+        gzwarn << "See https://github.com/robotology/gazebo-fmi/issues/17 for more details." << std::endl;
+    }
+
+    return true;
+}
+
+//////////////////////////////////////////////////
+double FMIActuatorPlugin::GetJointAcceleration(gazebo::physics::JointPtr jointPtr)
+{
+    if (jointPtr->GetType() & gazebo::physics::Base::HINGE_JOINT)
+    {
+        // Compute joint acceleration
+        // For a link `L`, the method ignition::math::Vector3d WorldAngularAccel () const
+        // returns the angular acceleration \$ {}^A \omega_{A,L} \$.
+        // Given a hinge/revolute joint ${P, C}$ connecting the links $P$ (parent) and $C$ (child), the method
+        // virtual ignition::math::Vector3d GlobalAxis( unsigned int  _index) const
+        // returns the angular part of the joint motion subspace \$  ^A s_{P,C} \in \mathbb{R}^6  \$
+        // that we indicate with \$ {}^A a_{P, C} \in \mathbb{R}^3 \$.
+        //
+        // The joint acceleration \$\ddot{\theta} \in \mathbb{R}\$ can then be computed as:
+        // \$
+        // \ddot{\theta} =  \left( ^C s_{P,C} \right)^T  {}^C \dot{\omega}\_{P,C} =  \left( ^C s_{P,C} \right)^T  ( {}^C \dot{\omega}\_{A,C} - {}^C \dot{\omega}\_{A,P} )  =
+        // \left( ^A s_{P,C} \right)^T ( {}^A \dot{\omega}\_{A,C} - {}^A \dot{\omega}\_{A,P} )
+        // \$
+
+        ignition::math::Vector3d A_axis_P_C = jointPtr->GlobalAxis(0u);
+        gazebo::physics::LinkPtr parent = jointPtr->GetParent();
+        gazebo::physics::LinkPtr child = jointPtr->GetChild();
+        ignition::math::Vector3d A_domega_A_P = parent->WorldAngularAccel();
+        ignition::math::Vector3d A_domega_A_C = child->WorldAngularAccel();
+        return A_axis_P_C.Dot(A_domega_A_C-A_domega_A_P);
+    }
+    else
+    {
+        // For other joints, just return 0 as acceleration
+        // Appropriate warning are printed during the load, and this ensures that
+        // the models that do not use acceleration (such as compliant models) still work fine
+        return 0.0;
+    }
+}
+
 
 //////////////////////////////////////////////////
 void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo)
@@ -216,11 +291,13 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
         double actuatorInput = joint->GetForce(0u);
         const double position = joint->Position(0u);
         const double velocity = joint->GetVelocity(0u);
+        const double acceleration = this->GetJointAcceleration(joint);
 
         // This order should be coherent with the order defined in LoadFMUs
         actuator.inputVarBuffers[0] = actuatorInput;
         actuator.inputVarBuffers[1] = position;
         actuator.inputVarBuffers[2] = velocity;
+        actuator.inputVarBuffers[3] = acceleration;
 
         // Set input
         bool ok = actuator.fmu.setInputVariables(actuator.inputVarReferences, actuator.inputVarBuffers);
