@@ -7,3 +7,7 @@
 # at your option.
 
 add_subdirectory(actuator)
+
+if(gazebo_VERSION_MAJOR GREATER 7.0)
+    add_subdirectory(single-body-fluid-dynamics)
+endif()
