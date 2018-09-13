@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+<world name="default">
+  <!-- No gravity -->
+  <gravity>0.0 0.0 0.0</gravity>
+  <include>
+    <uri>model://sun</uri>
+  </include>
+  <!-- Floating Cube Model -->
+  <model name="floating_cube">
+   <link name="link">
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.166666666</ixx>       <!-- for a box: ixx = 1/12 * mass * (y*y + z*z)  -->
+          <ixy>0.0</ixy>               <!-- for a box: ixy = 0 -->
+          <ixz>0.0</ixz>               <!-- for a box: ixz = 0 -->
+          <iyy>0.166666666</iyy>       <!-- for a box: iyy = 1/12 * mass * (y*y + z*z) -->
+          <iyz>0.0</iyz>               <!-- for a box: iyz = 0 -->
+          <izz>0.166666666</izz>       <!-- for a box: izz = 1/12 * mass * (y*y + z*z) -->
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <!-- fmi single body fluid dynamics plugin -->
+    <plugin name="fluid_dynamics_plugin" filename="libFMISingleBodyFluidDynamicsPlugin.so">
+       <single_body_fluid_dynamics>
+         <name>floating_cube_fluid_dynamics</name>
+         <link>floating_cube</link>
+         <fmu>NullFriction.fmu</fmu>
+       </single_body_fluid_dynamics>
+    </plugin>
+  </model>
+</world>
+</sdf>

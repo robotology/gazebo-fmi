@@ -83,10 +83,8 @@ for example if the actuator input variable in your FMU is called `motorInput` an
 </model>
 ~~~
 
-For a precise definition of what the `causality` of a FMU variable is, see Section 3.2 of [the "Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models" paper](http://lup.lub.lu.se/search/ws/files/5428900/2972293.pdf) or 
-Section 2.2.7, Page 46 of the ["Functional Mock-up Interface for
-Model Exchange and Co-Simulation" v2.0 specification](https://svn.modelica.org/fmi/branches/public/specifications/v2.0/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf).
-
+For a precise definition of what the `causality` of a FMU variable is, see Section 3.2 of [the "Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models" paper](http://lup.lub.lu.se/search/ws/files/5428900/2972293.pdf) or [Section 2.2.7 of the "Functional Mock-up Interface for
+Model Exchange and Co-Simulation" v2.0 specification](https://fmi-standard.org/docs/2.0.1-develop/#_definition_of_model_variables_modelvariables).
 
 
 An example related to co-simulation of force elements (i.e. an actuator model without `actuatorInput`)  is described in Section 4.1 of [the "Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models" paper](http://lup.lub.lu.se/search/ws/files/5428900/2972293.pdf). 
