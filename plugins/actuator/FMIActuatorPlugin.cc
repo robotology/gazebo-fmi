@@ -53,7 +53,7 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
     }
 
     if(joint)
-        gzlog << "FMIActuatorPlugin load for:"<<joint->GetScopedName()<<std::endl;
+        gzmsg << "FMIActuatorPlugin load for:"<<joint->GetScopedName()<<std::endl;
 
     // Set up a physics update callback
     this->connections.push_back(gazebo::event::Events::ConnectBeforePhysicsUpdate(
@@ -293,7 +293,16 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
         actuator.inputVarBuffers[0] = actuatorInput;
         actuator.inputVarBuffers[1] = position;
         actuator.inputVarBuffers[2] = velocity;
-        actuator.inputVarBuffers[3] = acceleration;          
+        actuator.inputVarBuffers[3] = acceleration;
+
+        static int loggingtime=0;
+        if(loggingtime==1000)
+        {
+            gzerr << "name,actuatorInput,position,velocity,acceleration:"<<joint->GetScopedName()<<","<<actuatorInput <<"," <<position <<","<<velocity <<","<<acceleration<< std::endl;
+            loggingtime=0;
+        }
+        ++loggingtime;
+            
 
         // Set input
         bool ok = actuator.fmu.setInputVariables(actuator.inputVarReferences, actuator.inputVarBuffers);
