@@ -295,15 +295,6 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
         actuator.inputVarBuffers[2] = velocity;
         actuator.inputVarBuffers[3] = acceleration;
 
-        static int loggingtime=0;
-        if(loggingtime==1000)
-        {
-            gzerr << "name,actuatorInput,position,velocity,acceleration:"<<joint->GetScopedName()<<","<<actuatorInput <<"," <<position <<","<<velocity <<","<<acceleration<< std::endl;
-            loggingtime=0;
-        }
-        ++loggingtime;
-            
-
         // Set input
         bool ok = actuator.fmu.setInputVariables(actuator.inputVarReferences, actuator.inputVarBuffers);
 
