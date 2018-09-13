@@ -35,7 +35,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/gazebo.hh>
 
-#include "FMUCoSimulation.hh"
+#include <gazebo_fmi/FMUCoSimulation.hh>
 
 /// Example SDF:
 ///       <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">

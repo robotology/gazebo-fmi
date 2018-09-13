@@ -65,6 +65,9 @@ if(BUILD_TESTING)
     add_subdirectory(extern)
 endif()
 
+# Add support libraries
+add_subdirectory(libraries)
+
 # Add plugins
 add_subdirectory(plugins)
 
