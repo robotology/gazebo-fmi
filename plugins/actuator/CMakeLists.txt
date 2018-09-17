@@ -6,14 +6,12 @@
 # https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 # at your option.
 
-add_library(FMIActuatorPlugin SHARED FMIActuatorPlugin.hh FMIActuatorPlugin.cc
-                                     FMUCoSimulation.hh FMUCoSimulation.cc)
-target_include_directories(FMIActuatorPlugin PUBLIC ${GAZEBO_INCLUDE_DIRS})
+add_library(FMIActuatorPlugin SHARED FMIActuatorPlugin.hh FMIActuatorPlugin.cc)
+target_include_directories(FMIActuatorPlugin SYSTEM PUBLIC ${GAZEBO_INCLUDE_DIRS})
 target_link_libraries(FMIActuatorPlugin PUBLIC ${GAZEBO_LIBRARIES})
+target_link_libraries(FMIActuatorPlugin PUBLIC gazebo_fmi::GazeboFMIPrivateUtils)
 target_link_libraries(FMIActuatorPlugin PRIVATE FMILibrary::FMILibrary)
-if(NOT MSVC)
-    target_link_libraries(FMIActuatorPlugin PUBLIC stdc++fs)
-endif()
+
 install(TARGETS FMIActuatorPlugin 
         EXPORT  ${PROJECT_NAME}
         LIBRARY       DESTINATION "${CMAKE_INSTALL_LIBDIR}"

@@ -8,7 +8,7 @@
  * at your option.
  */
 
-#include "FMUCoSimulation.hh"
+#include <gazebo_fmi/FMUCoSimulation.hh>
 
 #include <experimental/filesystem>
 
