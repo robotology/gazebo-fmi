@@ -37,12 +37,13 @@ using namespace gazebo_fmi;
 //////////////////////////////////////////////////
 void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 {
-    // Handle Gazebo simbody bug
-    if (gazebo::physics::get_world()->Physics()->GetType() == "simbody")
+    // Handle Gazebo Simbody (  https://bitbucket.org/osrf/gazebo/issues/2507/joint-setforce-is-not-additive-in-simbody )
+    // and DART ( https://bitbucket.org/osrf/gazebo/issues/2526/joint-setforce-is-not-additive-in-dart-in ) bug
+    if (gazebo::physics::get_world()->Physics()->GetType() == "simbody" ||
+        gazebo::physics::get_world()->Physics()->GetType() == "dart")
     {
         this->isSetForceCumulative = false;
     }
-
 
     // Parse parameters
     if (!this->ParseParameters(_parent, _sdf))
