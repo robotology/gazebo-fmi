@@ -23,6 +23,9 @@ omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/SoftTransmission.mo
 omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/StiffTransmission.mo
                       MODEL_NAME StiffTransmission
                       OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/DelayTransmission.mo
+                      MODEL_NAME DelayTransmission
+                      OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(FMIActuatorPluginPositionRegulationTest FMIActuatorPluginPositionRegulationTest.cc)
 target_include_directories(FMIActuatorPluginPositionRegulationTest PUBLIC ${GAZEBO_INCLUDE_DIRS})
@@ -43,7 +46,7 @@ target_compile_definitions(FMIActuatorPluginKnownInputTest PRIVATE -DFMI_ACTUATO
 
 # The test depends on the FMU
 # see https://samthursfield.wordpress.com/2015/11/21/cmake-dependencies-between-targets-and-files-and-custom-commands/
-add_custom_target(generate-fmu-actuator-test DEPENDS IdentityTransmission.fmu NullTransmission.fmu CompliantTransmission.fmu SoftTransmission.fmu StiffTransmission.fmu)
+add_custom_target(generate-fmu-actuator-test DEPENDS IdentityTransmission.fmu NullTransmission.fmu CompliantTransmission.fmu SoftTransmission.fmu StiffTransmission.fmu DelayTransmission.fmu)
 add_dependencies(FMIActuatorPluginPositionRegulationTest generate-fmu-actuator-test)
 add_test(NAME FMIActuatorPluginPositionRegulationTest COMMAND FMIActuatorPluginPositionRegulationTest)
 

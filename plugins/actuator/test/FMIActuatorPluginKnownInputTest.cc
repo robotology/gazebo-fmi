@@ -162,6 +162,8 @@ void FMIActuatorPluginKnownInputTest::PluginTest(const std::string &_physicsEngi
   this->PluginTestHelper(_physicsEngine, "test_NoTransmission.world", options);
   this->PluginTestHelper(_physicsEngine, "test_NullTransmission.world", options);
   this->PluginTestHelper(_physicsEngine, "test_IdentityTransmission.world", options);
+  this->PluginTestHelper(_physicsEngine, "test_DelayTransmission.world", options);
+
   // Uncommented to simulate using different worlds
   // this->PluginTestHelper(_physicsEngine, "test_StiffTransmission.world", options);
   // this->PluginTestHelper(_physicsEngine, "test_CompliantTransmission.world", options);
