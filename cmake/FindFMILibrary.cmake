@@ -49,19 +49,21 @@ find_library(FMILibrary_LIBRARY
 mark_as_advanced(FMILibrary_INCLUDE_DIR
                  FMILibrary_LIBRARY)
 
-if(FMILibrary_LIBRARY AND FMILibrary_INCLUDE_DIR AND NOT TARGET FMILibrary::FMILibrary)
-    add_library(FMILibrary::FMILibrary UNKNOWN IMPORTED)
-    set_target_properties(FMILibrary::FMILibrary PROPERTIES
-                          INTERFACE_INCLUDE_DIRECTORIES "${FMILibrary_INCLUDE_DIR}"
-                          IMPORTED_LOCATION "${FMILibrary_LIBRARY}")
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(FMILibrary
+                                  FOUND_VAR FMILibrary_FOUND
+                                  REQUIRED_VARS FMILibrary_LIBRARY FMILibrary_INCLUDE_DIR)
+
+if(FMILibrary_FOUND)
+    if(NOT TARGET FMILibrary::FMILibrary)
+      add_library(FMILibrary::FMILibrary UNKNOWN IMPORTED)
+      set_target_properties(FMILibrary::FMILibrary PROPERTIES
+                            INTERFACE_INCLUDE_DIRECTORIES "${FMILibrary_INCLUDE_DIR}"
+                            IMPORTED_LOCATION "${FMILibrary_LIBRARY}")
+    endif()
 
     set(FMILibrary_LIBRARIES FMILibrary::FMILibrary)
     set(FMILibrary_INCLUDE_DIRS "${FMILibrary_INCLUDE_DIR}")
-
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(FMILibrary
-                                      FOUND_VAR FMILibrary_FOUND
-                                      REQUIRED_VARS FMILibrary_LIBRARIES FMILibrary_INCLUDE_DIRS)
 
     # Set package properties if FeatureSummary was included
     if(COMMAND set_package_properties)
@@ -69,4 +71,3 @@ if(FMILibrary_LIBRARY AND FMILibrary_INCLUDE_DIR AND NOT TARGET FMILibrary::FMIL
                                                      URL "http://www.jmodelica.org/FMILibrary")
     endif()
 endif()
-
