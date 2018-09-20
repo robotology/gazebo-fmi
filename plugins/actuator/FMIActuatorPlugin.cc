@@ -52,6 +52,9 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
               << std::endl;
     }
 
+    // If necessary disable joint limits
+    this->DisableVelocityEffortLimits();
+
     // Try to open fmu for all joints in the plugin
     if (!this->LoadFMUs(_parent))
     {
@@ -88,7 +91,6 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       std::string jointName = elem->Get<std::string>("joint");
 
       joint=FindJointInModel(jointName,_parent);
-
 
       // Store pointer to the joint we will actuate
       if (!joint)
@@ -162,6 +164,15 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       }
       actuator.jointTorqueName = elem->Get<std::string>("jointTorqueName");
 
+      if (elem->HasElement("disable_velocity_effort_limits"))
+      {
+          actuator.disableVelocityEffortLimits = elem->Get<bool>("disable_velocity_effort_limits");
+      }
+      else
+      {
+          actuator.disableVelocityEffortLimits = false;
+      }
+
     }
     return true;
   }
@@ -172,6 +183,19 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
   }
 }
 
+//////////////////////////////////////////////////
+// Disable velocity and effort limits
+bool FMIActuatorPlugin::DisableVelocityEffortLimits()
+{
+    //for (unsigned int i = 0; i < this->actuators.size(); i++)
+    {
+        if (actuator.disableVelocityEffortLimits)
+        {
+            joint->SetVelocityLimit(0u, -1.0);
+            joint->SetEffortLimit(0u, -1.0);
+        }
+    }
+}
 
 //////////////////////////////////////////////////
 bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)

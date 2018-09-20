@@ -77,6 +77,8 @@ namespace gazebo_fmi
         public: std::string jointVelocityName;
         public: std::string jointAccelerationName;
         public: std::string jointTorqueName;
+        /// \brief Flag to indicate that Gazebo's velocit and effort limits should be disabled
+        public: bool disableVelocityEffortLimits{false};
 
         public: FMUCoSimulation fmu;
         public: std::vector<fmi2_value_reference_t> inputVarReferences;
@@ -100,6 +102,9 @@ namespace gazebo_fmi
 
         /// \brief Sanity check on the joint
         private: bool CheckJointType(gazebo::physics::JointPtr jointPtr);
+
+        /// \brief Disable the velocity and effort limits (if the specific option is enabled)
+        private: bool DisableVelocityEffortLimits();
 
         /// \brief Compute joint acceleration (not directly provided by Gazebo)
         private: double GetJointAcceleration(gazebo::physics::JointPtr jointPtr);

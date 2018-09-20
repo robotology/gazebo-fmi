@@ -146,6 +146,13 @@
       <child>upper_link</child>
       <axis>
         <xyz>1.0 0 0</xyz>
+        <limit>
+          <lower>-100</lower>
+          <upper>100</upper>
+          <!-- Low effort limit to test that disable_velocity_effort_limits works correctly -->
+          <effort>0.0001</effort>
+          <velocity>50</velocity>
+        </limit>
         <dynamics>
           <damping>4</damping>
           <friction>0</friction>
@@ -166,6 +173,7 @@
          <jointVelocityName>jointVelocity</jointVelocityName>
          <jointAccelerationName>jointAcceleration</jointAccelerationName>
          <jointTorqueName>jointTorque</jointTorqueName>
+         <disable_velocity_effort_limits>true</disable_velocity_effort_limits>
        </actuator>
     </plugin>
   </model>

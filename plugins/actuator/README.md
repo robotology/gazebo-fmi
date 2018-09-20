@@ -38,6 +38,7 @@ Documentation of the parameters of the `<actuator>` tag. All the parameters are 
 | jointVelocityName | string | Name of the FMU input variable representing the joint velocity. | This variable should be present in the FMU with causality `input`. | 
 | jointAccelerationName | string | Name of the FMU input variable representing the joint acceleration. | This variable should be present in the FMU with causality `input`. |
 | jointTorqueName   | string | Name of the FMU output variable representing the joint torque. | This variable should be present in the FMU with causality `output`. | 
+| disable_velocity_effort_limits   | bool | True if the joint velocity and effort limits are disabled (default: false). | This is useful if the transmission input is in a unit completly different from N or Nm, and the effort limits will be completly unrealisting for the actuator input. |
 
 
 For a precise definition of what the `causality` of a FMU variable is, see Section 3.2 of [the "Functional Mockup Interface 2.0: The Standard for Tool independent Exchange of Simulation Models" paper](http://lup.lub.lu.se/search/ws/files/5428900/2972293.pdf) or 
