@@ -27,6 +27,7 @@
 
 #include "FMIActuatorPlugin.hh"
 
+#include <cmath>
 #include <functional>
 
 #include <experimental/filesystem>
@@ -340,6 +341,17 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
 
         // This order should be coherent with the order defined in LoadFMUs
         double jointTorque = actuator.outputVarBuffers[0];
+
+        // If the output of the transmission is a nan, print an error
+        if (std::isnan(jointTorque))
+        {
+            gzerr << "FMUActuator output for joint " << joint->GetScopedName() << " is NaN, using cached value." << std::endl;
+            jointTorque = actuator.latestValidTorque;
+        }
+        else
+        {
+            actuator.latestValidTorque = jointTorque;
+        }
 
         // Note: in ODE, Bullet and DART, two consecutive SetForce calls are added to the same buffer:
         // for this reason, to overwrite the previous value we subtract it from the desired value

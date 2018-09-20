@@ -85,6 +85,7 @@ namespace gazebo_fmi
         public: std::vector<fmi2_value_reference_t> outputVarReferences;
         public: std::vector<double> inputVarBuffers;
         public: std::vector<double> outputVarBuffers;
+        public: double latestValidTorque{0.0};
 
     };
 
@@ -123,6 +124,7 @@ namespace gazebo_fmi
 
         /// \brief False for simbody, true for ode|bullet|dart, see https://bitbucket.org/osrf/gazebo/issues/2507/joint-setforce-is-not-additive-in-simbody
         private: bool isSetForceCumulative{true};
+
     };
 
     // Register this plugin with the simulator
