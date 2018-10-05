@@ -8,9 +8,12 @@
 
 set(GazeboFMIPrivateUtils_HDR
     include/gazebo_fmi/FMUCoSimulation.hh
+    include/gazebo_fmi/SDFConfigurationParsing.hh
 )
 
-add_library(GazeboFMIPrivateUtils SHARED ${GazeboFMIPrivateUtils_HDR} FMUCoSimulation.cc)
+add_library(GazeboFMIPrivateUtils SHARED ${GazeboFMIPrivateUtils_HDR}
+                                         FMUCoSimulation.cc
+                                         SDFConfigurationParsing.cc)
 add_library(gazebo_fmi::GazeboFMIPrivateUtils ALIAS GazeboFMIPrivateUtils)
 
 target_include_directories(GazeboFMIPrivateUtils PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")

@@ -168,11 +168,6 @@
          <name>upper_joint_actuator</name>
          <joint>upper_joint</joint>
          <fmu>IdentityTransmission.fmu</fmu>
-         <actuatorInputName>actuatorInput</actuatorInputName>
-         <jointPositionName>jointPosition</jointPositionName>
-         <jointVelocityName>jointVelocity</jointVelocityName>
-         <jointAccelerationName>jointAcceleration</jointAccelerationName>
-         <jointTorqueName>jointTorque</jointTorqueName>
          <disable_velocity_effort_limits>true</disable_velocity_effort_limits>
        </actuator>
     </plugin>

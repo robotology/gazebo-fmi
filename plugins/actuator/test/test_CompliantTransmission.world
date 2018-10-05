@@ -161,11 +161,6 @@
          <name>upper_joint_actuator</name>
          <joint>upper_joint</joint>
          <fmu>CompliantTransmission.fmu</fmu>
-         <actuatorInputName>actuatorInput</actuatorInputName>
-         <jointPositionName>jointPosition</jointPositionName>
-         <jointVelocityName>jointVelocity</jointVelocityName>
-         <jointAccelerationName>jointAcceleration</jointAccelerationName>
-         <jointTorqueName>jointTorque</jointTorqueName>
        </actuator>
     </plugin>
   </model>

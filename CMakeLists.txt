@@ -12,7 +12,7 @@ cmake_minimum_required(VERSION 3.5)
 # listed here: https://cmake.org/cmake/help/latest/command/project.html.
 project(gazebo-fmi
         LANGUAGES C CXX
-        VERSION 0.1.0)
+        VERSION 0.1.1)
 
 # Defines the CMAKE_INSTALL_LIBDIR, CMAKE_INSTALL_BINDIR and many other useful macros.
 # See https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html

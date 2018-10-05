@@ -1,5 +1,5 @@
 model NullTransmission
-  Modelica.Blocks.Interfaces.RealInput actuatorInput annotation(
+  Modelica.Blocks.Interfaces.RealInput actuatorInputWithStrangeName annotation(
     Placement(visible = true, transformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealInput jointPosition annotation(
     Placement(visible = true, transformation(origin = {120, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 180), iconTransformation(origin = {120, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 180)));

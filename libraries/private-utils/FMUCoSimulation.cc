@@ -243,7 +243,7 @@ bool FMUCoSimulation::getInputVariableRefs(const std::vector< std::string >& inp
    {
        fmi2_import_variable_t* var = fmi2_import_get_variable_by_name(m_pimpl->fmuHandle, inputVariableNames[i].c_str());
        if (!var) {
-           gzerr << "gazebo_fmi: impossible to find variable of name " << inputVariableNames[i] << " in FMU." << std::endl;
+           gzerr << "gazebo_fmi: impossible to find variable of name \"" << inputVariableNames[i] << "\" in FMU." << std::endl;
            return false;
        }
        if (fmi2_causality_enu_input != fmi2_import_get_causality(var)) {
@@ -268,7 +268,7 @@ bool FMUCoSimulation::getOutputVariableRefs(const std::vector< std::string >& ou
    {
        fmi2_import_variable_t* var = fmi2_import_get_variable_by_name(m_pimpl->fmuHandle, outputVariableNames[i].c_str());
        if (!var) {
-           gzerr << "gazebo_fmi: impossible to find variable of name " << outputVariableNames[i] << " in FMU." << std::endl;
+           gzerr << "gazebo_fmi: impossible to find variable of name \"" << outputVariableNames[i] << "\" in FMU." << std::endl;
            return false;
        }
        if (fmi2_causality_enu_output != fmi2_import_get_causality(var)) {

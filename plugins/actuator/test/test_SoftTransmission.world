@@ -161,11 +161,9 @@
          <name>upper_joint_actuator</name>
          <joint>upper_joint</joint>
          <fmu>SoftTransmission.fmu</fmu>
-         <actuatorInputName>actuatorInput</actuatorInputName>
-         <jointPositionName>jointPosition</jointPositionName>
-         <jointVelocityName>jointVelocity</jointVelocityName>
-         <jointAccelerationName>jointAcceleration</jointAccelerationName>
-         <jointTorqueName>jointTorque</jointTorqueName>
+         <!-- Test deprecated tags -->
+         <actuatorInputName>actuatorInputWithStrangeName</actuatorInputName>
+         <jointAccelerationName>jointAccelerationWithStrangeName</jointAccelerationName>
        </actuator>
     </plugin>
   </model>
