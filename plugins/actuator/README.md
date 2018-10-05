@@ -7,7 +7,7 @@ the actuator dynamics of a Gazebo model.
 
 ## Use the plugin 
 Example configuration: 
-~~~
+~~~xml
 <model>
   ...
   <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">
@@ -27,7 +27,7 @@ The plugin filename is `libFMIActuatorPlugin.so` .
 | Parameter name | Type    | Description                 | Required  |  Notes |
 |:--------------:|:-------:|:--------------------------: |:---------:|:-----:|
 | name           | string  | Name of the actuator, used for printing debug and error messages. | Yes | |
-| joint          | string  | Name of the joint. | The total list of joints contained in the model is scanned and the first joint that **ends** with this  name string is found. This is done to easily support nested models. Alternatively you can specify directly the **scoped joint name** as well.  | Yes  | |
+| joint          | string  | Name of the joint. | Yes | The total list of joints contained in the model is scanned and the first joint that **ends** with this  name string is found. This is done to easily support nested models. Alternatively you can specify directly the **scoped joint name** as well.  | 
 | fmu            | string  | Filename of the FMU plugin to use for actuator co-simulation. | Yes | This name is passed to the [`gazebo::common::SystemPaths::FindFile`](http://osrf-distributions.s3.amazonaws.com/gazebo/api/9.0.0/classgazebo_1_1common_1_1SystemPaths.html#a9e03f07eac9f89d8c4c14af5660fa938) method to find the absolute location of the FMU file. Adding the directory containing the FMUs to the [`GAZEBO_RESOURCE_PATH`](http://gazebosim.org/tutorials?tut=components) should be sufficient to make it visible to the plugin. |
 | disable_velocity_effort_limits   | bool | True if the joint velocity and effort limits are disabled (default: false). | No |  This is useful if the transmission input is in a unit completly different from N or Nm, and the effort limits will be completly unrealisting for the actuator input. |
 | variable_names | composite element | Optional tag to specify if the input/output variable names in FMU are different from the default ones. | No | |
@@ -36,15 +36,15 @@ The plugin filename is `libFMIActuatorPlugin.so` .
 
 | FMU default variable name | Type | Description       | Causality |
 |:--------------:|:-------:|:--------------------------: |:---------:|
-| actuatorInput | Real | Variable representing the actuator input. |  `input`. |
-| jointPosition | Real | Variable representing the joint position. | `input`. |
-| jointVelocity | Real| Variable representing the joint velocity. | `input`. |
-| jointAcceleration | Real | Variable representing the joint acceleration. |  `input`. |
-| jointTorque   | Real | Variable representing the joint torque. | `output`. |
+| `actuatorInput` | Real | Variable representing the actuator input. |  `input` |
+| `jointPosition` | Real | Variable representing the joint position. | `input`|
+| `jointVelocity` | Real| Variable representing the joint velocity. | `input` |
+| `jointAcceleration` | Real | Variable representing the joint acceleration. |  `input` |
+| `jointTorque`   | Real | Variable representing the joint torque. | `output` |
 
 If you have an FMU that does not uses this names for its input and outputs, you can easily specify different names using the `variable_names` tag,
 for example if the actuator input variable in your FMU is called `motorInput` and the torque output is `torque` you can specifiy them as:
-~~~
+~~~xml
 <model>
   ...
   <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">
