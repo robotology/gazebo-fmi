@@ -1,5 +1,5 @@
 model StiffTransmission
-  Modelica.Blocks.Interfaces.RealInput actuatorInput annotation(
+  Modelica.Blocks.Interfaces.RealInput actuatorInputWithStrangeName annotation(
     Placement(visible = true, transformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealInput jointPosition annotation(
     Placement(visible = true, transformation(origin = {120, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 180), iconTransformation(origin = {120, -60}, extent = {{-20, -20}, {20, 20}}, rotation = 180)));
@@ -30,7 +30,7 @@ equation
     Line(points = {{81, 60}, {110, 60}}, color = {0, 0, 127}));
   connect(jointVelocity, angleToTorqueAdaptor1.w) annotation(
     Line(points = {{120, -20}, {83.5, -20}, {83.5, -6}, {49, -6}}, color = {0, 0, 127}));
-  connect(actuatorInput, torque1.tau) annotation(
+  connect(actuatorInputWithStrangeName, torque1.tau) annotation(
     Line(points = {{-120, 0}, {-88, 0}}, color = {0, 0, 127}));
   connect(jointPosition, angleToTorqueAdaptor1.phi) annotation(
     Line(points = {{120, -60}, {80.5, -60}, {80.5, -16}, {49, -16}}, color = {0, 0, 127}));

@@ -161,11 +161,10 @@
          <name>upper_joint_actuator</name>
          <joint>upper_joint</joint>
          <fmu>NullTransmission.fmu</fmu>
-         <actuatorInputName>actuatorInput</actuatorInputName>
-         <jointPositionName>jointPosition</jointPositionName>
-         <jointVelocityName>jointVelocity</jointVelocityName>
-         <jointAccelerationName>jointAcceleration</jointAccelerationName>
-         <jointTorqueName>jointTorque</jointTorqueName>
+         <!-- Test non-standard variable names -->
+         <variable_names>
+           <actuatorInput name="actuatorInputWithStrangeName" />
+         </variable_names>
        </actuator>
     </plugin>
   </model>

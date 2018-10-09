@@ -43,11 +43,6 @@
 ///          <name>actuator_0</name> <!-- optional -->
 ///          <joint>JOINT_0</joint> <!-- name of joint to actuate in the model -->
 ///          <fmu>electric_motor</fmu> <!-- name of the fmu -->
-///          <actuatorInputName>actuatorInput</actuatorInputName> <!-- FMU actuator input variable name -->
-///          <jointPositionName>jointPosition</jointPositionName> <!-- FMU joint position input variable name -->
-///          <jointVelocityName>jointVelocity</jointVelocityName> <!-- FMU joint velocity input variable name -->
-///          <jointAccelerationName>jointAcceleration</jointAccelerationName> <!-- FMU joint acceleration input variable name -->
-///          <jointTorqueName>jointTorque</jointTorqueName>       <!-- FMU joint torque output variable name -->
 ///        </actuator>
 ///       </plugin>
 ///    </model>
@@ -56,11 +51,8 @@
 /// - name
 /// - joint
 /// - fmu:
-/// - actuatorInput: FMU actuator input variable name
-/// - jointPosition: FMU joint position input variable name
-/// - jointVelocity: FMU joint velocity input variable name
-/// - jointAcceleration: FMU joint acceleration input variable name
-/// - jointTorque:   FMU joint torque output variable name
+/// Optional fields:
+/// - variable_names
 
 namespace gazebo_fmi
 {
@@ -72,11 +64,18 @@ namespace gazebo_fmi
 
         public: std::string fmuAbsolutePath;
 
-        public: std::string actuatorInputName;
-        public: std::string jointPositionName;
-        public: std::string jointVelocityName;
-        public: std::string jointAccelerationName;
-        public: std::string jointTorqueName;
+        /// \brief Default input variable names
+        public: std::vector<std::string> m_inputVariablesDefaultNames;
+
+        /// \brief Actual input variable names, after parsing variable_names
+        public: std::vector<std::string> m_inputVariablesNames;
+
+        /// \brief Default output variable names
+        public: std::vector<std::string> m_outputVariablesDefaultNames;
+
+        /// \brief Actual output variable names, after parsing variable_names
+        public: std::vector<std::string> m_outputVariablesNames;
+
         /// \brief Flag to indicate that Gazebo's velocit and effort limits should be disabled
         public: bool disableVelocityEffortLimits{false};
 
