@@ -16,7 +16,20 @@ if(NOT FMILibrary_POPULATED)
         FetchContent_Populate(FMILibrary)
         set(BUILD_SHARED_LIBS OFF)
         option (FMILIB_BUILD_TESTS "Build tests" OFF)
+        # FMILibrary shadows the CMAKE_INSTALL_PREFIX with the following line 
+        # SET(CMAKE_INSTALL_PREFIX ${FMILIB_INSTALL_PREFIX} CACHE INTERNAL "Prefix prepended to install directories" FORCE)
+        # in https://github.com/svn2github/FMILibrary/blob/d49ed3ff2dabc6e17cc4a0c6f3fa6d2ae64a1683/CMakeLists.txt#L87
+        # for this reason, we initialize FMILIB_INSTALL_PREFIX to CMAKE_INSTALL_PREFIX to make sure that FMILibrary is installed
+        # in the usual location
+        set(FMILIB_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH "Prefix prepended to install directories" FORCE)
+        # The FMILIB_GENERATE_DOXYGEN_DOC option tries to modifies the CMAKE_INSTALL_PREFIX outside of the install target, 
+        # that is a big problem, especially when the default CMAKE_INSTALL_PREFIX is /usr/local, as the configuration will
+        # fail unless it is run by root. For this reason we just disable this option 
+        option (FMILIB_GENERATE_DOXYGEN_DOC "Generate doxygen doc target" OFF)
         add_subdirectory(${fmilibrary_SOURCE_DIR} ${fmilibrary_BINARY_DIR})
+        # We also re-set CMAKE_INSTALL_PREFIX to get rid of the fact that CMAKE_INSTALL_PREFIX is 
+        # marked as "INTERNAL"
+        set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH "Prefix prepended to install directories" FORCE)
         set(BUILD_SHARED_LIBS ON)
 endif()
 
