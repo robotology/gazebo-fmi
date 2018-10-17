@@ -59,8 +59,13 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
 
     // Handle Gazebo Simbody (  https://bitbucket.org/osrf/gazebo/issues/2507/joint-setforce-is-not-additive-in-simbody )
     // and DART ( https://bitbucket.org/osrf/gazebo/issues/2526/joint-setforce-is-not-additive-in-dart-in ) bug
+#if GAZEBO_MAJOR_VERSION >=8
     if (gazebo::physics::get_world()->Physics()->GetType() == "simbody" ||
         gazebo::physics::get_world()->Physics()->GetType() == "dart")
+#else
+    if (gazebo::physics::get_world()->GetPhysicsEngine()->GetType() == "simbody" ||
+        gazebo::physics::get_world()->GetPhysicsEngine()->GetType() == "dart")
+#endif
     {
         this->m_isSetForceCumulative = false;
     }
@@ -248,7 +253,11 @@ bool FMIActuatorPlugin::DisableVelocityEffortLimits()
 //////////////////////////////////////////////////
 bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)
 {
+#if GAZEBO_MAJOR_VERSION >=8
     double simulatedTimeInSeconds  = _parent->GetWorld()->SimTime().Double();
+#else
+    double simulatedTimeInSeconds  = _parent->GetWorld()->GetSimTime().Double();
+#endif
 
     for (auto current: m_actuators)
     {
@@ -281,10 +290,19 @@ bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)
 //////////////////////////////////////////////////
 bool FMIActuatorPlugin::CheckJointType(gazebo::physics::JointPtr jointPtr)
 {
+#if GAZEBO_MAJOR_VERSION >=8
     if (jointPtr->DOF() != 1)
+#else
+    if (jointPtr->GetAngleCount() != 1)
+#endif
     {
         gzerr << "FMIActuatorPlugin: joint " << jointPtr->GetScopedName() << " has "
-              << jointPtr->DOF() << ", only joint with 1 DOFs are currently supported." << std::endl;
+#if GAZEBO_MAJOR_VERSION >=8
+              << jointPtr->DOF() 
+#else
+              << jointPtr->GetAngleCount() 
+#endif
+              << ", only joint with 1 DOFs are currently supported." << std::endl;
         return false;
     }
 
@@ -318,11 +336,17 @@ double FMIActuatorPlugin::GetJointAcceleration(gazebo::physics::JointPtr jointPt
         // \left( ^A s_{P,C} \right)^T ( {}^A \dot{\omega}\_{A,C} - {}^A \dot{\omega}\_{A,P} )
         // \$
 
-        ignition::math::Vector3d A_axis_P_C = jointPtr->GlobalAxis(0u);
         gazebo::physics::LinkPtr parent = jointPtr->GetParent();
         gazebo::physics::LinkPtr child = jointPtr->GetChild();
+#if GAZEBO_MAJOR_VERSION >=8
+        ignition::math::Vector3d A_axis_P_C = jointPtr->GlobalAxis(0u);
         ignition::math::Vector3d A_domega_A_P = parent->WorldAngularAccel();
         ignition::math::Vector3d A_domega_A_C = child->WorldAngularAccel();
+#else
+        gazebo::math::Vector3 A_axis_P_C = jointPtr->GetGlobalAxis(0u);
+        gazebo::math::Vector3 A_domega_A_P = parent->GetWorldAngularAccel();
+        gazebo::math::Vector3 A_domega_A_C = child->GetWorldAngularAccel();
+#endif
         return A_axis_P_C.Dot(A_domega_A_C-A_domega_A_P);
     }
     else
@@ -341,7 +365,11 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
     // TODO(traversaro): review this part
     double simulatedTimeInSeconds  = updateInfo.simTime.Double();
     auto world = gazebo::physics::get_world(updateInfo.worldName);
+#if GAZEBO_MAJOR_VERSION >=8
     double stepSizeInSeconds = world->Physics()->GetMaxStepSize();
+#else
+    double stepSizeInSeconds = world->GetPhysicsEngine()->GetMaxStepSize();
+#endif
 
 
     // Update the stored joints according to the desired model.
@@ -350,7 +378,11 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
         //FMUActuatorProperties& actuator = this->actuators[i];
 
         double actuatorInput = current->m_joint->GetForce(0u);
+#if GAZEBO_MAJOR_VERSION >=8
         const double position = current->m_joint->Position(0u);
+#else
+        const double position = current->m_joint->GetAngle(0u).Radian();
+#endif
         const double velocity = current->m_joint->GetVelocity(0u);
         const double acceleration = this->GetJointAcceleration(current->m_joint);
 
