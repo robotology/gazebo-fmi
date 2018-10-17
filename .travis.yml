@@ -20,7 +20,7 @@ env:
   matrix:
     - TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial", GAZEBO_VERSION=gazebo7
     - TRAVIS_BUILD_TYPE="Debug" UBUNTU="xenial", GAZEBO_VERSION=gazebo8
-    - TRAVIS_BUILD_TYPE="Release" UBUNTU="bionic", GAZEBO_VERSION=gazebo8
+    - TRAVIS_BUILD_TYPE="Release" UBUNTU="bionic", GAZEBO_VERSION=gazebo9
     - TRAVIS_BUILD_TYPE="Debug" UBUNTU="bionic", GAZEBO_VERSION=gazebo9
 
 # ===================
