@@ -18,10 +18,10 @@ env:
   global:
     - TRAVIS_CMAKE_GENERATOR="Unix Makefiles"
   matrix:
-    - TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial"
-    - TRAVIS_BUILD_TYPE="Debug" UBUNTU="xenial"
-    - TRAVIS_BUILD_TYPE="Release" UBUNTU="bionic"
-    - TRAVIS_BUILD_TYPE="Debug" UBUNTU="bionic"
+    - TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial", GAZEBO_VERSION=gazebo7
+    - TRAVIS_BUILD_TYPE="Debug" UBUNTU="xenial", GAZEBO_VERSION=gazebo8
+    - TRAVIS_BUILD_TYPE="Release" UBUNTU="bionic", GAZEBO_VERSION=gazebo8
+    - TRAVIS_BUILD_TYPE="Debug" UBUNTU="bionic", GAZEBO_VERSION=gazebo9
 
 # ===================
 # STAGE: test (linux)
@@ -41,6 +41,7 @@ script:
       --env TRAVIS_BUILD_DIR \
       --env TRAVIS_BUILD_TYPE \
       --env TRAVIS_CMAKE_GENERATOR \
+      --env GAZEBO_VERSION \
       ubuntu:$UBUNTU \
       sh .ci/install_debian_and_script.sh
 
