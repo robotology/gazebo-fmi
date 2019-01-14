@@ -28,7 +28,6 @@
 #include "FMIActuatorPlugin.hh"
 
 #include <functional>
-#include <iostream>
 
 #include <experimental/filesystem>
 
