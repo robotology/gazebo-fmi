@@ -56,8 +56,8 @@ for example if the actuator input variable in your FMU is called `motorInput` an
 <model>
   ...
   <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">
+    <verbose>false</verbose>
     <actuator>
-      <verbose>false</verbose>
       <name>actuator_0</name>
       <joint>JOINT_0</joint>
       <fmu>electric_motor.fmu</fmu>
