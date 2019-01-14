@@ -217,7 +217,7 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
     
       if(verbose)
       {
-        gzinfo << "FMIActuatorPlugin: actuator loaded for joint name:" << jointName << std::endl;
+        gzmsg << "FMIActuatorPlugin: actuator loaded for joint name:" << jointName << std::endl;
       }
     }
 
