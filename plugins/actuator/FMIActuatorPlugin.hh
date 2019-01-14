@@ -122,6 +122,9 @@ namespace gazebo_fmi
 
         /// \brief False for simbody, true for ode|bullet|dart, see https://bitbucket.org/osrf/gazebo/issues/2507/joint-setforce-is-not-additive-in-simbody
         private: bool isSetForceCumulative{true};
+
+        /// \brief Flag to indicate that we want the plugin to log in a verbose way
+        private: bool verbose{false};
     };
 
     // Register this plugin with the simulator

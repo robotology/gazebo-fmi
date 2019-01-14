@@ -11,6 +11,7 @@ Example configuration:
 <model>
   ...
   <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">
+    <verbose>false</verbose>
     <actuator>
       <name>actuator_0</name> 
       <joint>JOINT_0</joint> 
@@ -21,6 +22,13 @@ Example configuration:
 </model>
 ~~~
 The plugin filename is `libFMIActuatorPlugin.so` .
+
+### Documentation of the parameters of the `<plugin>` tag.
+| Parameter name | Type    | Description                 | Required  |  Notes |
+|:--------------:|:-------:|:--------------------------: |:---------:|:-----:|
+| verbose        | boolean | Verbose logging setting. | No | Default value is false.
+| actuator       | actuator| Actuators managed by this plugin instance. | Yes | Look at `<actuator>` tag below.|
+
 
 ### Documentation of the parameters of the `<actuator>` tag.
 
@@ -49,6 +57,7 @@ for example if the actuator input variable in your FMU is called `motorInput` an
   ...
   <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">
     <actuator>
+      <verbose>false</verbose>
       <name>actuator_0</name>
       <joint>JOINT_0</joint>
       <fmu>electric_motor.fmu</fmu>

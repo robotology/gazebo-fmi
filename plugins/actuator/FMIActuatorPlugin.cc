@@ -28,6 +28,7 @@
 #include "FMIActuatorPlugin.hh"
 
 #include <functional>
+#include <iostream>
 
 #include <experimental/filesystem>
 
@@ -105,6 +106,11 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
 // Read the SDF
 bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 {
+  if (_sdf->HasElement("verbose"))
+  {
+      verbose = _sdf->Get<bool>("verbose");
+  }
+
   if (_sdf->HasElement("actuator"))
   {
     // TODO(traversaro) : support list of actuator elements
@@ -209,8 +215,14 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
         gzwarn << "FMIActuatorPlugin: option jointTorqueName deprecated, please use variable_names tag instead." << std::endl;
         actuator.m_outputVariablesNames[FMIActuatorPluginNS::jointTorque] = elem->Get<std::string>("jointTorqueName");
       }
-
+    
+      if(verbose)
+      {
+        gzwarn << "FMIActuatorPlugin: actuator loaded for joint name:" << jointName << std::endl;
+      }
     }
+
+
     return true;
   }
   else
