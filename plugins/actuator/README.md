@@ -26,7 +26,7 @@ The plugin filename is `libFMIActuatorPlugin.so` .
 ### Documentation of the parameters of the `<plugin>` tag.
 | Parameter name | Type    | Description                 | Required  |  Notes |
 |:--------------:|:-------:|:--------------------------: |:---------:|:-----:|
-| verbose        | boolean | Verbose logging setting. | No | Default value is false.
+| verbose        | boolean | If true, print non-error messages related to plugin. | No | Default value is false. | 
 | actuator       | actuator | Actuators managed by this plugin instance. | Yes | Look at `<actuator>` tag documentation in the next section. |
 
 
