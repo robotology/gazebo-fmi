@@ -99,6 +99,14 @@ A common language used for generating actuator or trasmission models in the form
 an object-oriented, equation based language to conveniently model complex physical systems. Modelica is used in several  Simulation Environments, such as [OpenModelica](https://openmodelica.org/) or [Dymola](https://www.3ds.com/products-services/catia/products/dymola).
 Please see the [`doc/modelica-actuator.md`](doc/modelica-actuator.md) document for additional insight on how to use the gazebo-fmi Actuator plugin with Modelica models.
 
+## Naming conventions
+
+In this software the following main name conventions are used:
+* Type names start with upper case.
+* Class member variabile names start with m_ then lower case.
+* Class member method names start with upper case.
+* Local variabile names start with lower case.
+
 
 
 

@@ -60,9 +60,9 @@ namespace gazebo_fmi
     class FMUActuatorProperties
     {
         /// \brief An identifier for the actuator.
-        public: std::string name;
+        public: std::string m_name;
 
-        public: std::string fmuAbsolutePath;
+        public: std::string m_fmuAbsolutePath;
 
         /// \brief Default input variable names
         public: std::vector<std::string> m_inputVariablesDefaultNames;
@@ -79,11 +79,11 @@ namespace gazebo_fmi
         /// \brief Flag to indicate that Gazebo's velocit and effort limits should be disabled
         public: bool disableVelocityEffortLimits{false};
 
-        public: FMUCoSimulation fmu;
-        public: std::vector<fmi2_value_reference_t> inputVarReferences;
-        public: std::vector<fmi2_value_reference_t> outputVarReferences;
-        public: std::vector<double> inputVarBuffers;
-        public: std::vector<double> outputVarBuffers;
+        public: FMUCoSimulation m_fmu;
+        public: std::vector<fmi2_value_reference_t> m_inputVarReferences;
+        public: std::vector<fmi2_value_reference_t> m_outputVarReferences;
+        public: std::vector<double> m_inputVarBuffers;
+        public: std::vector<double> m_outputVarBuffers;
 
         /// \brief Flag to indicate that the plugin is enabled
         public: bool m_enabled{true};
@@ -115,19 +115,19 @@ namespace gazebo_fmi
         private: void BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo);
 
         /// \brief The joints we want to actuate
-        private: gazebo::physics::JointPtr joint;
+        private: gazebo::physics::JointPtr m_joint;
 
         /// \brief Corresponding actuator properties (power, max torque, etc.)
-        private: FMUActuatorProperties actuator;
+        private: FMUActuatorProperties m_actuator;
 
         /// \brief Connections to events associated with this class.
-        private: std::vector<gazebo::event::ConnectionPtr> connections;
+        private: std::vector<gazebo::event::ConnectionPtr> m_connections;
 
         /// \brief False for simbody, true for ode|bullet|dart, see https://bitbucket.org/osrf/gazebo/issues/2507/joint-setforce-is-not-additive-in-simbody
-        private: bool isSetForceCumulative{true};
+        private: bool m_isSetForceCumulative{true};
 
         /// \brief Flag to indicate that we want the plugin to log in a verbose way
-        private: bool verbose{false};
+        private: bool m_verbose{false};
     };
 
     // Register this plugin with the simulator
