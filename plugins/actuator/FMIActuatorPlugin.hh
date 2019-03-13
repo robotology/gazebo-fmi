@@ -85,6 +85,9 @@ namespace gazebo_fmi
         public: std::vector<double> inputVarBuffers;
         public: std::vector<double> outputVarBuffers;
 
+        /// \brief Flag to indicate that the plugin is enabled
+        public: bool m_enabled{true};
+
     };
 
     /// \brief Plugin for simulating a torque-speed curve for actuators.

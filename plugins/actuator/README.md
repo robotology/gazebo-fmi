@@ -39,6 +39,7 @@ The plugin filename is `libFMIActuatorPlugin.so` .
 | fmu            | string  | Filename of the FMU plugin to use for actuator co-simulation. | Yes | This name is passed to the [`gazebo::common::SystemPaths::FindFile`](http://osrf-distributions.s3.amazonaws.com/gazebo/api/9.0.0/classgazebo_1_1common_1_1SystemPaths.html#a9e03f07eac9f89d8c4c14af5660fa938) method to find the absolute location of the FMU file. Adding the directory containing the FMUs to the [`GAZEBO_RESOURCE_PATH`](http://gazebosim.org/tutorials?tut=components) should be sufficient to make it visible to the plugin. |
 | disable_velocity_effort_limits   | bool | True if the joint velocity and effort limits are disabled (default: false). | No |  This is useful if the transmission input is in a unit completly different from N or Nm, and the effort limits will be completly unrealisting for the actuator input. |
 | variable_names | composite element | Optional tag to specify if the input/output variable names in FMU are different from the default ones. | No | |
+| enabled | bool | Enable or disable the actuator. When an actuator is not enabled, the simulation ignores it, and it behaves like as if the actuator was not present at all in the SDF. | No | Default value: true |
 
 ### FMU Variable Documentation
 

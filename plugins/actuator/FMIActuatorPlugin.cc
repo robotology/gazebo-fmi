@@ -85,6 +85,13 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
               << std::endl;
     }
 
+    if(!actuator.m_enabled)
+    {
+        gzwarn << "FMIActuatorPlugin: actuator disabled: "<<actuator.name
+              << std::endl;
+        return;
+    }
+
     // If necessary disable joint limits
     this->DisableVelocityEffortLimits();
 
@@ -115,6 +122,12 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
     // TODO(traversaro) : support list of actuator elements
     sdf::ElementPtr elem = _sdf->GetElement("actuator");
     {
+
+      if (elem->HasElement("enabled"))
+      {
+        actuator.m_enabled = elem->Get<bool>("enabled");               
+      }
+        
 
       // actuator name is currently an optional property
       if (elem->HasElement("name"))
