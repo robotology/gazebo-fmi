@@ -87,7 +87,7 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
 
     if(!actuator.m_enabled)
     {
-        gzwarn << "FMIActuatorPlugin: actuator disabled:"<<actuator.name
+        gzwarn << "FMIActuatorPlugin: actuator disabled: "<<actuator.name
               << std::endl;
         return;
     }
