@@ -11,5 +11,5 @@ A set of conventions about how to write code for this project.
 * Class member method names start with upper case.
 * Local variabile names start with lower case.
 
-For that not foreseen in the current document refer to:
+For any additional detail not covered by this document, please refer to
 https://github.com/robotology/yarp/blob/master/.github/CONTRIBUTING.md
