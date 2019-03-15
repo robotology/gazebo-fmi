@@ -31,44 +31,13 @@
 
 #include <experimental/filesystem>
 
-#include <gazebo_fmi/SDFConfigurationParsing.hh>
-
-
 using namespace gazebo_fmi;
-
-// INDICES: INPUTS, OUTPUT
-namespace FMIActuatorPluginNS
-{
-enum InputIndex
-{
-    actuatorInput = 0,
-    jointPosition,
-    jointVelocity,
-    jointAcceleration,
-    TotalInputs,
-};
-
-enum OutputIndex
-{
-    jointTorque = 0,
-    TotalOutputs,
-};
-}
 
 
 //////////////////////////////////////////////////
 void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 {
-    // Configure default variable names
-    m_actuator.m_inputVariablesDefaultNames.resize(FMIActuatorPluginNS::TotalInputs);
-    m_actuator.m_inputVariablesDefaultNames[FMIActuatorPluginNS::actuatorInput]     = "actuatorInput";
-    m_actuator.m_inputVariablesDefaultNames[FMIActuatorPluginNS::jointPosition]     = "jointPosition";
-    m_actuator.m_inputVariablesDefaultNames[FMIActuatorPluginNS::jointVelocity]     = "jointVelocity";
-    m_actuator.m_inputVariablesDefaultNames[FMIActuatorPluginNS::jointAcceleration] = "jointAcceleration";
-
-    m_actuator.m_outputVariablesDefaultNames.resize(FMIActuatorPluginNS::TotalOutputs);
-    m_actuator.m_outputVariablesDefaultNames[FMIActuatorPluginNS::jointTorque]     = "jointTorque";
-
+   
 
     // Handle Gazebo Simbody (  https://bitbucket.org/osrf/gazebo/issues/2507/joint-setforce-is-not-additive-in-simbody )
     // and DART ( https://bitbucket.org/osrf/gazebo/issues/2526/joint-setforce-is-not-additive-in-dart-in ) bug
@@ -83,13 +52,6 @@ void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr 
     {
         gzerr << "FMIActuatorPlugin: error in parsing SDF parameters, plugin loading failed."
               << std::endl;
-    }
-
-    if(!m_actuator.m_enabled)
-    {
-        gzwarn << "FMIActuatorPlugin: actuator disabled: "<<m_actuator.m_name
-              << std::endl;
-        return;
     }
 
     // If necessary disable joint limits
@@ -116,22 +78,26 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
   {
       m_verbose = _sdf->Get<bool>("verbose");
   }
-
-  if (_sdf->HasElement("actuator"))
+  
+  sdf::ElementPtr elem = _sdf->GetElement("actuator");
+  if(!elem)
   {
-    // TODO(traversaro) : support list of actuator elements
-    sdf::ElementPtr elem = _sdf->GetElement("actuator");
-    {
+      gzerr << "FMIActuatorPlugin: Invalid SDF, no actuator tag found." << std::endl;
+      return false;
+  }
+
+  while (elem) 
+  {
+      FMUActuatorProperties_sptr actuator=std::make_shared<FMUActuatorProperties>();
 
       if (elem->HasElement("enabled"))
       {
-        m_actuator.m_enabled = elem->Get<bool>("enabled");               
+        actuator->m_enabled = elem->Get<bool>("enabled");               
       }
         
-
       // actuator name is currently an optional property
       if (elem->HasElement("name"))
-        m_actuator.m_name = elem->Get<std::string>("name");
+        actuator->m_name = elem->Get<std::string>("name");
 
       if (!elem->HasElement("joint"))
       {
@@ -141,10 +107,10 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       }
       std::string jointName = elem->Get<std::string>("joint");
 
-      m_joint=FindJointInModel(jointName,_parent);
+      actuator->m_joint=FindJointInModel(jointName,_parent);
 
       // Store pointer to the joint we will actuate
-      if (!m_joint)
+      if (!actuator->m_joint)
       {
          gzerr << "FMIActuatorPlugin: Invalid SDF, actuator joint " << jointName << " does not "
                << "exist!" << std::endl;
@@ -152,12 +118,11 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       }
 
       // Check type
-      bool typeOk = this->CheckJointType(m_joint);
+      bool typeOk = this->CheckJointType(actuator->m_joint);
       if (!typeOk)
       {
         return false;
       }
-
 
       if (!elem->HasElement("fmu"))
       {
@@ -166,8 +131,8 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
         return false;
       }
 
-      m_actuator.m_fmuAbsolutePath =  gazebo::common::SystemPaths::Instance()->FindFile(elem->Get<std::string>("fmu"));
-      if (!std::experimental::filesystem::exists(m_actuator.m_fmuAbsolutePath))
+      actuator->m_fmuAbsolutePath =  gazebo::common::SystemPaths::Instance()->FindFile(elem->Get<std::string>("fmu"));
+      if (!std::experimental::filesystem::exists(actuator->m_fmuAbsolutePath))
       {
         gzerr << "FMIActuatorPlugin: Impossible to find FMU named " << elem->Get<std::string>("fmu")
               << " in the GAZEBO_RESOURCE_PATH directories" << std::endl;
@@ -177,19 +142,19 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
 
       if (elem->HasElement("disable_velocity_effort_limits"))
       {
-          m_actuator.disableVelocityEffortLimits = elem->Get<bool>("disable_velocity_effort_limits");
+          actuator->disableVelocityEffortLimits = elem->Get<bool>("disable_velocity_effort_limits");
       }
       else
       {
-          m_actuator.disableVelocityEffortLimits = false;
+          actuator->disableVelocityEffortLimits = false;
       }
 
       // Process variable_names element
       bool variableNamesOk = gazebo_fmi::parseVariableNamesSDFElement(elem,
-                                                                      m_actuator.m_inputVariablesDefaultNames,
-                                                                      m_actuator.m_inputVariablesNames,
-                                                                      m_actuator.m_outputVariablesDefaultNames,
-                                                                      m_actuator.m_outputVariablesNames);
+                                                                      actuator->m_inputVariablesDefaultNames,
+                                                                      actuator->m_inputVariablesNames,
+                                                                      actuator->m_outputVariablesDefaultNames,
+                                                                      actuator->m_outputVariablesNames);
 
       if (!variableNamesOk)
       {
@@ -201,59 +166,63 @@ bool FMIActuatorPlugin::ParseParameters(gazebo::physics::ModelPtr _parent, sdf::
       if (elem->HasElement("actuatorInputName"))
       {
         gzwarn << "FMIActuatorPlugin: option actuatorInputName deprecated, please use variable_names tag instead." << std::endl;
-        m_actuator.m_inputVariablesNames[FMIActuatorPluginNS::actuatorInput] = elem->Get<std::string>("actuatorInputName");
+        actuator->m_inputVariablesNames[FMIActuatorPluginNS::actuatorInput] = elem->Get<std::string>("actuatorInputName");
       }
 
       if (elem->HasElement("jointPositionName"))
       {
         gzwarn << "FMIActuatorPlugin: option jointPositionName deprecated, please use variable_names tag instead."  << std::endl;
-        m_actuator.m_inputVariablesNames[FMIActuatorPluginNS::jointPosition] = elem->Get<std::string>("jointPositionName");
+        actuator->m_inputVariablesNames[FMIActuatorPluginNS::jointPosition] = elem->Get<std::string>("jointPositionName");
       }
 
       if (elem->HasElement("jointVelocityName"))
       {
         gzwarn << "FMIActuatorPlugin: option jointVelocityName deprecated, please use variable_names tag instead."  << std::endl;
-        m_actuator.m_inputVariablesNames[FMIActuatorPluginNS::jointVelocity] = elem->Get<std::string>("jointVelocityName");
+        actuator->m_inputVariablesNames[FMIActuatorPluginNS::jointVelocity] = elem->Get<std::string>("jointVelocityName");
       }
 
       if (elem->HasElement("jointAccelerationName"))
       {
         gzwarn << "FMIActuatorPlugin: option jointAccelerationName deprecated, please use variable_names tag instead." << std::endl;
-        m_actuator.m_inputVariablesNames[FMIActuatorPluginNS::jointAcceleration] = elem->Get<std::string>("jointAccelerationName");
+        actuator->m_inputVariablesNames[FMIActuatorPluginNS::jointAcceleration] = elem->Get<std::string>("jointAccelerationName");
       }
 
       if (elem->HasElement("jointTorqueName"))
       {
         gzwarn << "FMIActuatorPlugin: option jointTorqueName deprecated, please use variable_names tag instead." << std::endl;
-        m_actuator.m_outputVariablesNames[FMIActuatorPluginNS::jointTorque] = elem->Get<std::string>("jointTorqueName");
+        actuator->m_outputVariablesNames[FMIActuatorPluginNS::jointTorque] = elem->Get<std::string>("jointTorqueName");
       }
     
       if(m_verbose)
       {
         gzmsg << "FMIActuatorPlugin: actuator loaded for joint name:" << jointName << std::endl;
       }
-    }
 
-
-    return true;
+      elem = elem->GetNextElement("actuator");
+      if(!actuator->m_enabled)
+      {
+        gzwarn << "FMIActuatorPlugin: actuator disabled: "<<actuator->m_name
+              << std::endl;
+        continue;
+      }
+      
+      m_actuators.push_back(actuator);
+      gzwarn << "Actuator loaded: "<<actuator->m_name
+              << std::endl;
   }
-  else
-  {
-      gzerr << "FMIActuatorPlugin: Invalid SDF, no actuator tag found." << std::endl;
-      return false;
-  }
+  return true;
 }
 
 //////////////////////////////////////////////////
 // Disable velocity and effort limits
 bool FMIActuatorPlugin::DisableVelocityEffortLimits()
 {
-    //for (unsigned int i = 0; i < this->actuators.size(); i++)
+    for (auto current: m_actuators)
     {
-        if (m_actuator.disableVelocityEffortLimits)
+        if (current->disableVelocityEffortLimits)
         {
-            m_joint->SetVelocityLimit(0u, -1.0);
-            m_joint->SetEffortLimit(0u, -1.0);
+            current->m_joint->SetVelocityLimit(0u, -1.0);
+            current->m_joint->SetEffortLimit(0u, -1.0);
         }
     }
 }
@@ -263,30 +232,29 @@ bool FMIActuatorPlugin::LoadFMUs(gazebo::physics::ModelPtr _parent)
 {
     double simulatedTimeInSeconds  = _parent->GetWorld()->SimTime().Double();
 
-
-    //for (unsigned int i = 0; i < this->actuators.size(); i++)
+    for (auto current: m_actuators)
     {
         // FMUActuatorProperties& actuator = this->actuators[i];
         // gazebo::physics::JointPtr joint
-        std::string instanceName = m_joint->GetScopedName()+"_fmuTransmission";
-        bool ok = m_actuator.m_fmu.load(m_actuator.m_fmuAbsolutePath, instanceName, simulatedTimeInSeconds);
+        std::string instanceName = current->m_joint->GetScopedName()+"_fmuTransmission";
+        bool ok = current->m_fmu.load(current->m_fmuAbsolutePath, instanceName, simulatedTimeInSeconds);
         if (!ok) {
             return false;
         }
 
         // Get references for input variables
-        ok = m_actuator.m_fmu.getInputVariableRefs(m_actuator.m_inputVariablesNames, m_actuator.m_inputVarReferences);
+        ok = current->m_fmu.getInputVariableRefs(current->m_inputVariablesNames, current->m_inputVarReferences);
         if (!ok) {
             return false;
         }
-        m_actuator.m_inputVarBuffers.resize(m_actuator.m_inputVarReferences.size());
+        current->m_inputVarBuffers.resize(current->m_inputVarReferences.size());
 
         // Get references for output variables
-        ok = m_actuator.m_fmu.getOutputVariableRefs(m_actuator.m_outputVariablesNames, m_actuator.m_outputVarReferences);
+        ok = current->m_fmu.getOutputVariableRefs(current->m_outputVariablesNames, current->m_outputVarReferences);
         if (!ok) {
             return false;
         }
-        m_actuator.m_outputVarBuffers.resize(m_actuator.m_outputVarBuffers.size());
+        current->m_outputVarBuffers.resize(current->m_outputVarBuffers.size());
     }
 
     return true;
@@ -359,47 +327,47 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
 
 
     // Update the stored joints according to the desired model.
-    //for (unsigned int i = 0; i < this->joints.size(); i++)
+    for (auto current: m_actuators)
     {
         //FMUActuatorProperties& actuator = this->actuators[i];
 
-        double actuatorInput = m_joint->GetForce(0u);
-        const double position = m_joint->Position(0u);
-        const double velocity = m_joint->GetVelocity(0u);
-        const double acceleration = this->GetJointAcceleration(m_joint);
+        double actuatorInput = current->m_joint->GetForce(0u);
+        const double position = current->m_joint->Position(0u);
+        const double velocity = current->m_joint->GetVelocity(0u);
+        const double acceleration = this->GetJointAcceleration(current->m_joint);
 
         // This order should be coherent with the order defined in LoadFMUs
-        m_actuator.m_inputVarBuffers[0] = actuatorInput;
-        m_actuator.m_inputVarBuffers[1] = position;
-        m_actuator.m_inputVarBuffers[2] = velocity;
-        m_actuator.m_inputVarBuffers[3] = acceleration;
+        current->m_inputVarBuffers[0] = actuatorInput;
+        current->m_inputVarBuffers[1] = position;
+        current->m_inputVarBuffers[2] = velocity;
+        current->m_inputVarBuffers[3] = acceleration;
 
         // Set input
-        bool ok = m_actuator.m_fmu.setInputVariables(m_actuator.m_inputVarReferences, m_actuator.m_inputVarBuffers);
+        bool ok = current->m_fmu.setInputVariables(current->m_inputVarReferences, current->m_inputVarBuffers);
 
         // Run fmu simulation
-        ok = ok && m_actuator.m_fmu.doStep(simulatedTimeInSeconds, stepSizeInSeconds);
+        ok = ok && current->m_fmu.doStep(simulatedTimeInSeconds, stepSizeInSeconds);
 
         // Get ouput
-        ok = ok && m_actuator.m_fmu.getOutputVariables(m_actuator.m_outputVarReferences, m_actuator.m_outputVarBuffers);
+        ok = ok && current->m_fmu.getOutputVariables(current->m_outputVarReferences, current->m_outputVarBuffers);
 
         if (!ok)
         {
-            gzerr << "gazebo_fmi: Failure in simulating trasmission of " << m_joint->GetScopedName() << std::endl;
+            gzerr << "gazebo_fmi: Failure in simulating trasmission of " << current->m_joint->GetScopedName() << std::endl;
         }
 
         // This order should be coherent with the order defined in LoadFMUs
-        double jointTorque = m_actuator.m_outputVarBuffers[0];
+        double jointTorque = current->m_outputVarBuffers[0];
 
         // Note: in ODE, Bullet and DART, two consecutive SetForce calls are added to the same buffer:
         // for this reason, to overwrite the previous value we subtract it from the desired value
         if (this->m_isSetForceCumulative)
         {
-            m_joint->SetForce(0u, jointTorque-actuatorInput);
+            current->m_joint->SetForce(0u, jointTorque-actuatorInput);
         }
         else
         {
-            m_joint->SetForce(0u, jointTorque);
+            current->m_joint->SetForce(0u, jointTorque);
         }
     }
 }
@@ -407,14 +375,14 @@ void FMIActuatorPlugin::BeforePhysicsUpdateCallback(const gazebo::common::Update
 //////////////////////////////////////////////////
 gazebo::physics::JointPtr FMIActuatorPlugin::FindJointInModel(const std::string& jointName,const gazebo::physics::ModelPtr _parent)
 {
-    m_joint=nullptr;
+    gazebo::physics::JointPtr joint{nullptr};
     for (auto currentJoint:_parent->GetJoints())
     {
         const std::string& currentJointName=currentJoint->GetName();
 
         if(currentJointName==jointName)//if you use the scoped name
         {
-            m_joint=currentJoint;
+            joint=currentJoint;
             break;
         }
 
@@ -432,8 +400,8 @@ gazebo::physics::JointPtr FMIActuatorPlugin::FindJointInModel(const std::string&
         if (currentJointNameUnscoped!=jointName)
             continue;
 
-        m_joint=currentJoint;
+        joint=currentJoint;
         break;
     } 
-    return m_joint;
+    return joint;
 } 
