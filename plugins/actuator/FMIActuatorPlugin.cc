@@ -33,6 +33,24 @@
 
 using namespace gazebo_fmi;
 
+// INDICES: INPUTS, OUTPUT
+namespace FMIActuatorPluginNS
+{
+enum InputIndex
+{
+    actuatorInput = 0,
+    jointPosition,
+    jointVelocity,
+    jointAcceleration,
+    TotalInputs,
+};
+
+enum OutputIndex
+{
+    jointTorque = 0,
+    TotalOutputs,
+};
+}
 
 //////////////////////////////////////////////////
 void FMIActuatorPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _sdf)
@@ -405,3 +423,17 @@ gazebo::physics::JointPtr FMIActuatorPlugin::FindJointInModel(const std::string&
     } 
     return joint;
 } 
+
+//////////////////////////////////////////////////
+FMUActuatorProperties::FMUActuatorProperties()
+{
+    // Configure default variable names
+    m_inputVariablesDefaultNames.resize(FMIActuatorPluginNS::TotalInputs);
+    m_inputVariablesDefaultNames[FMIActuatorPluginNS::actuatorInput]     = "actuatorInput";
+    m_inputVariablesDefaultNames[FMIActuatorPluginNS::jointPosition]     = "jointPosition";
+    m_inputVariablesDefaultNames[FMIActuatorPluginNS::jointVelocity]     = "jointVelocity";
+    m_inputVariablesDefaultNames[FMIActuatorPluginNS::jointAcceleration] = "jointAcceleration";
+
+    m_outputVariablesDefaultNames.resize(FMIActuatorPluginNS::TotalOutputs);
+    m_outputVariablesDefaultNames[FMIActuatorPluginNS::jointTorque]     = "jointTorque";
+}
