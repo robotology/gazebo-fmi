@@ -12,22 +12,32 @@ Example configuration:
   ...
   <plugin name="fmi_actuator_plugin" filename="libFMIActuatorPlugin.so">
     <verbose>false</verbose>
+    
     <actuator>
       <name>actuator_0</name> 
       <joint>JOINT_0</joint> 
-      <fmu>electric_motor.fmu</fmu>
+      <fmu>electric_motor_0.fmu</fmu>
       <disable_velocity_effort_limits>true</disable_velocity_effort_limits>
     </actuator>
+
+    <actuator>
+      <name>actuator_1</name> 
+      <joint>JOINT_1</joint> 
+      <fmu>electric_motor_1.fmu</fmu>
+      <disable_velocity_effort_limits>true</disable_velocity_effort_limits>
+    </actuator>
+
    </plugin>
 </model>
 ~~~
+
 The plugin filename is `libFMIActuatorPlugin.so` .
 
 ### Documentation of the parameters of the `<plugin>` tag.
 | Parameter name | Type    | Description                 | Required  |  Notes |
 |:--------------:|:-------:|:--------------------------: |:---------:|:-----:|
 | verbose        | boolean | If true, print non-error messages related to plugin. | No | Default value is false. | 
-| actuator       | actuator | Actuators managed by this plugin instance. | Yes | Look at `<actuator>` tag documentation in the next section. |
+| actuator       | actuator | Actuators managed by this plugin instance. | Yes | You can specify more than one actuator for each plugin instance. Look at `<actuator>` tag documentation in the next section. |
 
 
 ### Documentation of the parameters of the `<actuator>` tag.
@@ -68,6 +78,7 @@ for example if the actuator input variable in your FMU is called `motorInput` an
         <jointTorque   name="torque" />
       </variable_names>
     </actuator>
+    ...
    </plugin>
 </model>
 ~~~
