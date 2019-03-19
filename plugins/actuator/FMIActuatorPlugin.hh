@@ -31,10 +31,12 @@
 #include <functional>
 #include <vector>
 #include <string>
+#include <memory>
 #include <gazebo/common/Events.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/gazebo.hh>
 
+#include <gazebo_fmi/SDFConfigurationParsing.hh>
 #include <gazebo_fmi/FMUCoSimulation.hh>
 
 /// Example SDF:
@@ -54,11 +56,14 @@
 /// Optional fields:
 /// - variable_names
 
+
 namespace gazebo_fmi
 {
     /// \brief Properties for a model of a rotational actuator
     class FMUActuatorProperties
     {
+        public: FMUActuatorProperties();
+
         /// \brief An identifier for the actuator.
         public: std::string m_name;
 
@@ -88,7 +93,12 @@ namespace gazebo_fmi
         /// \brief Flag to indicate that the plugin is enabled
         public: bool m_enabled{true};
 
+        /// \brief The joints we want to actuate
+        public: gazebo::physics::JointPtr m_joint;
+
     };
+
+    using FMUActuatorProperties_sptr=std::shared_ptr<FMUActuatorProperties>;
 
     /// \brief Plugin for simulating a torque-speed curve for actuators.
     class GAZEBO_VISIBLE FMIActuatorPlugin : public gazebo::ModelPlugin
@@ -114,11 +124,8 @@ namespace gazebo_fmi
         /// \brief Callback on before physics update event
         private: void BeforePhysicsUpdateCallback(const gazebo::common::UpdateInfo & updateInfo);
 
-        /// \brief The joints we want to actuate
-        private: gazebo::physics::JointPtr m_joint;
-
         /// \brief Corresponding actuator properties (power, max torque, etc.)
-        private: FMUActuatorProperties m_actuator;
+        private: std::vector<FMUActuatorProperties_sptr> m_actuators;
 
         /// \brief Connections to events associated with this class.
         private: std::vector<gazebo::event::ConnectionPtr> m_connections;
