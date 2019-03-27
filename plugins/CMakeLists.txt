@@ -7,3 +7,4 @@
 # at your option.
 
 add_subdirectory(actuator)
+add_subdirectory(statelogger)
