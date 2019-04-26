@@ -23,10 +23,10 @@
 
 namespace gazebo_fmi
 {
-/// \brief Properties for a model of a actuator
+/// \brief Properties for a FMU for single body fluid dynamics
 class FMUSingleBodyFluidDynamicsProperties
 {
-    /// \brief An identifier for the actuator.
+    /// \brief An identifier for the fmu
     public: std::string name;
 
     public: std::string fmuAbsolutePath;
@@ -51,7 +51,7 @@ class FMUSingleBodyFluidDynamicsProperties
 
 };
 
-/// \brief Plugin for simulating a torque-speed curve for actuators.
+/// \brief Plugin for interaction between a single body and a surrounding fluid
 class GAZEBO_VISIBLE FMISingleBodyFluidDynamicsPlugin : public gazebo::ModelPlugin
 {
     /// Documentation inherited
