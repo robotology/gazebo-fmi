@@ -36,7 +36,6 @@ if(BUILD_TESTING)
     enable_testing()
 endif()
 
-
 # Encourage user to specify a build type (e.g. Release, Debug, etc.), otherwise set it to Release.
 if(NOT CMAKE_CONFIGURATION_TYPES)
     if(NOT CMAKE_BUILD_TYPE)
@@ -50,6 +49,11 @@ find_package(gazebo REQUIRED)
 if (gazebo_VERSION_MAJOR LESS 7.0)
     message(status "Gazebo version : " ${gazebo_VERSION_MAJOR}.${gazebo_VERSION_MINOR}.${gazebo_VERSION_PATCH})
     message(FATAL_ERROR "Your Gazebo version is older than Gazebo 7.0. Gazebo Yarp plugins are supported with gazebo versions >= 7.0. Please update to a newer version")
+endif()
+
+# Gazebo 7 does not export the C++11 requirement in its targets
+if (gazebo_VERSION_MAJOR LESS 8.0)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 endif()
 
 find_package(FMILibrary QUIET)

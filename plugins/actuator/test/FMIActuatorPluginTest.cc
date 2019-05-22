@@ -42,14 +42,22 @@ void FMIActuatorPluginTest::PluginTestHelper(const std::string &_physicsEngine,
   ASSERT_TRUE(world != NULL);
 
   // Verify physics engine type
+#if GAZEBO_MAJOR_VERSION >=8
   gazebo::physics::PhysicsEnginePtr physics = world->Physics();
+#else
+  gazebo::physics::PhysicsEnginePtr physics = world->GetPhysicsEngine();
+#endif
   ASSERT_TRUE(physics != NULL);
   EXPECT_EQ(physics->GetType(), _physicsEngine);
 
   gzdbg << "FMIActuatorPluginTest: testing world " << worldName << std::endl;
 
   // Get model
+#if GAZEBO_MAJOR_VERSION >=8
   auto model = world->ModelByName("pendulum_with_base");
+#else
+  auto model = world->GetModel("pendulum_with_base");
+#endif
 
   // Set the desired position
   auto jointController = model->GetJointController();
@@ -78,15 +86,21 @@ void FMIActuatorPluginTest::PluginTestHelper(const std::string &_physicsEngine,
     world->Step(1);
   }
 
-  gzdbg << "Final  position " << joint->Position(0u) << std::endl;
+#if GAZEBO_MAJOR_VERSION >=8
+  double finalJointPosition = joint->Position(0u);
+#else
+  double finalJointPosition = joint->GetAngle(0u).Radian();
+#endif
+
+  gzdbg << "Final  position " << finalJointPosition << std::endl;
   double tol = 0.1;
   if (options.finalPositionIsReached)
   {
-    EXPECT_NEAR(joint->Position(0u), options.expectedFinalPosition, tol);
+    EXPECT_NEAR(finalJointPosition, options.expectedFinalPosition, tol);
   }
   else
   {
-    EXPECT_TRUE(std::abs(joint->Position(0u)-options.expectedFinalPosition) > tol);
+    EXPECT_TRUE(std::abs(finalJointPosition-options.expectedFinalPosition) > tol);
   }
 
   // Unload the simulation
