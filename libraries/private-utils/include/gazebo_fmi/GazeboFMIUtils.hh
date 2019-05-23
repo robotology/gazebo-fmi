@@ -26,7 +26,7 @@ inline double ComputeJointAcceleration(gazebo::physics::JointPtr jointPtr)
         // Given a hinge/revolute joint ${P, C}$ connecting the links $P$ (parent) and $C$ (child), the method
         // virtual ignition::math::Vector3d GlobalAxis( unsigned int  _index) const
         // returns the angular part of the joint motion subspace \$  ^A s_{P,C} \in \mathbb{R}^6  \$
-        // that we indicate with \$ {}^A a_{P, C} \in \mathbb{R}^3 \$.
+        // that we indicate with \$ {}^A a_{P, C} \in \mathbb{R}^3 \$ (axis in the code for readability).
         //
         // The joint acceleration \$\ddot{\theta} \in \mathbb{R}\$ can then be computed as:
         // \$
