@@ -1,0 +1,11 @@
+# This setup-example.sh file can be source (via the command source <location-of-the-file>/setup-example.sh)
+# to append to the GAZEBO_PLUGIN_PATH the location of the installed gazebo-fmi plugins, and to
+# GAZEBO_RESOURCE_PATH the location of the installed examples .world and .fmu, so that examples
+# world can be launched directly from the terminal, via the command gazebo  <example-world>.word .
+# For more info on Gazebo related env variables, chec http://gazebosim.org/tutorials?tut=components#EnvironmentVariables .
+
+# Load directory that contains the Gazebo plugins
+export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:@CMAKE_INSTALL_PREFIX@/lib
+
+# Load directory with example worlds and directory with fmus
+export GAZEBO_RESOURCE_PATH=$GAZEBO_RESOURCE_PATH:@CMAKE_INSTALL_PREFIX@/@GAZEBO_FMI_EXAMPLES_INSTALL_DIR@

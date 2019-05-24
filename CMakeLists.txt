@@ -36,6 +36,13 @@ if(BUILD_TESTING)
     enable_testing()
 endif()
 
+# Enable RPATH support for installed binaries and libraries
+include(AddInstallRPATHSupport)
+add_install_rpath_support(BIN_DIRS "${CMAKE_INSTALL_FULL_BINDIR}"
+                          LIB_DIRS "${CMAKE_INSTALL_FULL_LIBDIR}"
+                          INSTALL_NAME_DIR "${CMAKE_INSTALL_FULL_LIBDIR}"
+                          USE_LINK_PATH)
+
 # Encourage user to specify a build type (e.g. Release, Debug, etc.), otherwise set it to Release.
 if(NOT CMAKE_CONFIGURATION_TYPES)
     if(NOT CMAKE_BUILD_TYPE)
@@ -70,6 +77,11 @@ if(BUILD_TESTING)
   add_subdirectory(extern)
 endif()
 
+# Add setup-examples.sh to easily test exampes
+set(GAZEBO_FMI_EXAMPLES_INSTALL_DIR ${CMAKE_INSTALL_DATAROOTDIR}/gazebo-fmi/examples)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/setup-examples.sh.in ${PROJECT_BINARY_DIR}/setup-examples.sh)
+install(FILES ${PROJECT_BINARY_DIR}/setup-examples.sh DESTINATION ${GAZEBO_FMI_EXAMPLES_INSTALL_DIR})
+
 # Add support libraries
 add_subdirectory(libraries)
 
@@ -84,6 +96,8 @@ install_basic_package_files(${PROJECT_NAME}
                             VARS_PREFIX ${PROJECT_NAME}
                             NO_CHECK_REQUIRED_COMPONENTS_MACRO
                             DEPENDENCIES "gazebo")
+
+
 
 # Add the uninstall target
 include(AddUninstallTarget)
