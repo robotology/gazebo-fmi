@@ -1,0 +1,5 @@
+# Load directory that contains the Gazebo plugins
+export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:@PROJECT_BINARY_DIR@/lib
+
+# Load directory with example worlds and directory with fmus
+export GAZEBO_RESOURCE_PATH=$GAZEBO_RESOURCE_PATH:@PROJECT_BINARY_DIR@/examples:@PROJECT_BINARY_DIR@/fmu
