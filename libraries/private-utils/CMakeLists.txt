@@ -35,4 +35,8 @@ install(TARGETS GazeboFMIPrivateUtils
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS GazeboFMIPrivateUtils)
 
 
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
+
 
