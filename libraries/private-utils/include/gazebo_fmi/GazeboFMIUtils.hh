@@ -38,12 +38,12 @@ inline double ComputeJointAcceleration(gazebo::physics::JointPtr jointPtr)
         gazebo::physics::LinkPtr child = jointPtr->GetChild();
 #if GAZEBO_MAJOR_VERSION >=8
         ignition::math::Vector3d A_axis_P_C = jointPtr->GlobalAxis(0u);
-        ignition::math::Vector3d A_domega_A_P = parent->WorldAngularAccel();
-        ignition::math::Vector3d A_domega_A_C = child->WorldAngularAccel();
+        ignition::math::Vector3d A_domega_A_P = parent ? parent->WorldAngularAccel() : ignition::math::Vector3d::Zero;
+        ignition::math::Vector3d A_domega_A_C = child ? child->WorldAngularAccel() : ignition::math::Vector3d::Zero;
 #else
         gazebo::math::Vector3 A_axis_P_C = jointPtr->GetGlobalAxis(0u);
-        gazebo::math::Vector3 A_domega_A_P = parent->GetWorldAngularAccel();
-        gazebo::math::Vector3 A_domega_A_C = child->GetWorldAngularAccel();
+        gazebo::math::Vector3 A_domega_A_P = parent ? parent->GetWorldAngularAccel() : gazebo::math::Vector3::Zero;
+        gazebo::math::Vector3 A_domega_A_C = child ? child->GetWorldAngularAccel() : gazebo::math::Vector3::Zero;
 #endif
         return A_axis_P_C.Dot(A_domega_A_C-A_domega_A_P);
     }

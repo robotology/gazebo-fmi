@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+<world name="default">
+  <include>
+    <uri>model://ground_plane</uri>
+  </include>
+  <include>
+    <uri>model://sun</uri>
+  </include>
+  <model name="pendulum_attached_to_world">
+    <pose>0 -0.5 1.5 0 0 0</pose>
+    <link name="pendulum">
+      <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <pose>0 0 -1.0 0 0 0</pose>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+      <visual name="joint_axis">
+        <pose>0.0 0.0 0.0 1.5707963268 0.0 0.0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.025</radius>
+            <length>0.1</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+      <visual name="rod">
+        <pose>0 0 -0.5 0.0 0.0 0.0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.0185185185185</radius>
+            <length>1</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      <visual name="point_mass">
+        <pose>0 0 -1.0 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.055555555555555</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+    <joint name="upper_joint" type="revolute">
+      <parent>world</parent>
+      <child>pendulum</child>
+      <axis>
+        <xyz>0.0 1.0 0.0</xyz>
+        <dynamics>
+          <damping>4</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+  </model>
+</world>
+</sdf>
