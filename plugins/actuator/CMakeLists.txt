@@ -20,7 +20,7 @@ install(TARGETS FMIActuatorPlugin
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS FMIActuatorPlugin)
 
 # Build examples FMUs
-add_subdirectory(examples/damped_pendulum)
+add_subdirectory(examples)
 
 if(BUILD_TESTING)
     add_subdirectory(test)
