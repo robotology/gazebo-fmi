@@ -19,6 +19,9 @@ install(TARGETS FMIActuatorPlugin
         RUNTIME       DESTINATION "${CMAKE_INSTALL_BINDIR}")
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS FMIActuatorPlugin)
 
+# Build examples FMUs
+add_subdirectory(examples/damped_pendulum)
+
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
