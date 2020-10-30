@@ -20,5 +20,7 @@ The two models will start in the 0 position. You can change the target position 
 gz joint -m no_actuator_model -j joint --pos-p 10.0 --pos-d 3.0 --pos-t 1.0 && gz joint -m simple_electrical_actuator_model -j joint --pos-p 10.0 --pos-d 3.0 --pos-t 1.0
 ~~~
 The `pos-t` command specify the target of the joint position controller, while `pos-p` and `pos-d` specifies the position and derivative gains of the internal Gazebo PID joint controller.
-Interestingly, due to the use of the low-level eletrical actuator model, the gains that are able to stabilize with minimal overshoot and oscillations the `no_actuator_model` are not a good fit
-instead for the `simple_electrical_actuator_model`. The idea is that in this way the Gazebo model, as long as the electical actuation is similar to the real model, can be used for the tuning (at least preliminary) of the gains of the real joint torque controllers.
+
+In this example it is possible to see that the gains that are able to stabilize with minimal overshoot and oscillations the `no_actuator_model` are not a good fit for the the `simple_electrical_actuator_model`, due to the use of the low-level eletrical actuator model
+
+The idea is that in this way the Gazebo model, as long as the electical actuation is similar to the real model, can be used for the tuning (at least preliminary) of the gains of the real joint torque controllers.
