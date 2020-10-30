@@ -12,7 +12,7 @@ sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_rel
 wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add -
 
 # OpenModelica
-for deb in deb deb-src; do echo "$deb http://build.openmodelica.org/apt `lsb_release -cs` nightly"; done | tee /etc/apt/sources.list.d/openmodelica.list
+for deb in deb deb-src; do echo "$deb http://build.openmodelica.org/apt `lsb_release -cs` release"; done | tee /etc/apt/sources.list.d/openmodelica.list
 wget -q http://build.openmodelica.org/apt/openmodelica.asc -O- | apt-key add -
 
 # Update packages
@@ -25,7 +25,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get install -y cmake clang git
 
 # Dependencies
-apt-get install -y lib${GAZEBO_VERSION}-dev openmodelica libmatio-dev
+apt-get install -y lib${GAZEBO_VERSION}-dev openmodelica omlib-modelica-3.2.2 libmatio-dev
 
 # Script
 cd $TRAVIS_BUILD_DIR
