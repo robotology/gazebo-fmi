@@ -19,7 +19,7 @@ omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/NullFriction.mo
 add_executable(FMISingleBodyFluidDynamicsPluginTest FMISingleBodyFluidDynamicsPluginTest.cc)
 target_include_directories(FMISingleBodyFluidDynamicsPluginTest PUBLIC ${GAZEBO_INCLUDE_DIRS})
 find_library(GAZEBO_TEST_LIB NAMES  gazebo_test_fixture HINTS ${GAZEBO_LIBRARY_DIRS})
-target_link_libraries(FMISingleBodyFluidDynamicsPluginTest PUBLIC ${GAZEBO_LIBRARIES} ${GAZEBO_TEST_LIB} gazebo_fmi_gtest)
+target_link_libraries(FMISingleBodyFluidDynamicsPluginTest PUBLIC ${GAZEBO_TEST_LIB} ${GAZEBO_LIBRARIES} gazebo_fmi_gtest)
 target_compile_definitions(FMISingleBodyFluidDynamicsPluginTest PRIVATE -DCMAKE_CURRENT_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(FMISingleBodyFluidDynamicsPluginTest PRIVATE -DCMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 target_compile_definitions(FMISingleBodyFluidDynamicsPluginTest PRIVATE -DFMI_PLUGIN_BUILD_DIR="$<TARGET_FILE_DIR:FMISingleBodyFluidDynamicsPlugin>")
