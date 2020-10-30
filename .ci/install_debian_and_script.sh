@@ -25,7 +25,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get install -y cmake clang git
 
 # Dependencies
-apt-get install -y lib${GAZEBO_VERSION}-dev openmodelica libmatio-dev
+apt-get install -y lib${GAZEBO_VERSION}-dev openmodelica omlib-modelica-3.2.2 libmatio-dev
 
 # Script
 cd $TRAVIS_BUILD_DIR
