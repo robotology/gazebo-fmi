@@ -30,7 +30,7 @@ omc_compile_mo_to_fmu(INPUT_MO ${CMAKE_CURRENT_SOURCE_DIR}/DelayTransmission.mo
 add_executable(FMIActuatorPluginPositionRegulationTest FMIActuatorPluginPositionRegulationTest.cc)
 target_include_directories(FMIActuatorPluginPositionRegulationTest PUBLIC ${GAZEBO_INCLUDE_DIRS})
 find_library(GAZEBO_TEST_LIB NAMES  gazebo_test_fixture HINTS ${GAZEBO_LIBRARY_DIRS})
-target_link_libraries(FMIActuatorPluginPositionRegulationTest PUBLIC ${GAZEBO_LIBRARIES} ${GAZEBO_TEST_LIB} gazebo_fmi_gtest)
+target_link_libraries(FMIActuatorPluginPositionRegulationTest PUBLIC ${GAZEBO_TEST_LIB} ${GAZEBO_LIBRARIES} gazebo_fmi_gtest)
 target_compile_definitions(FMIActuatorPluginPositionRegulationTest PRIVATE -DCMAKE_CURRENT_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(FMIActuatorPluginPositionRegulationTest PRIVATE -DCMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 target_compile_definitions(FMIActuatorPluginPositionRegulationTest PRIVATE -DFMI_ACTUATOR_PLUGIN_BUILD_DIR="$<TARGET_FILE_DIR:FMIActuatorPlugin>")
